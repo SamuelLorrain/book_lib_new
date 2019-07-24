@@ -1,0 +1,3 @@
+__pycache__/
+*.db
+launch_gui.sh
