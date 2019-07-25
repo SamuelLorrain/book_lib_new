@@ -191,11 +191,7 @@ class PanelRight(wx.Panel):
         self.list.InsertColumn(5, 'physic', width=80)
         self.list.InsertColumn(6, 'resume', width=80)
         self.list.InsertColumn(7, 'filetype', width=80)
-        self.list.InsertColumn(8, 'edition', width=80)
         self.list.InsertColumn(8, 'complement', width=80)
-        self.list.InsertColumn(9, 'subject', width=80)
-        self.list.InsertColumn(10, 'genre', width=80)
-        self.list.InsertColumn(11, 'author', width=80)
 
         #sizer
         self.hBox = wx.BoxSizer(wx.HORIZONTAL)

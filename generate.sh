@@ -1,13 +1,24 @@
-#!/bin/bash
+#!/bin/sh
 
 ###
 #
-# Pour regénérer la  db,
-# enlever le "#" au début
-# des 2 dernières lignes puis lancer le fichier
+# To generate DB
+# uncomment lasts lines
+# and launch the file.
+#
+# ! Don't save
+# ! If you want to keep older data,
+# ! Dont forget to change the name
+# ! of the old DB to keep it.
 #
 ###
 DATABASE_NAME="data.db"
-SQL_FILE="book_db_schematic.sql"
+SQL_FILE="schema.sql"
+
+if [ -f "$DATABASE_NAME" ] ;then
+    echo "\nThe database already exists with the same name. To generate a new database
+You must change the name of the existant database first\n"
+    exit 1
+fi
 #rm $DATABASE_NAME
 #sqlite3 $DATABASE_NAME < $SQL_FILE

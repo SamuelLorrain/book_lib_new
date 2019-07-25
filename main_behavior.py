@@ -298,7 +298,3 @@ class Behavior:
             self.booklist.SetItem(index,  6, str(i.resume))
             self.booklist.SetItem(index,  7, str(i.getFiletype()))
             self.booklist.SetItem(index,  8, str(i.complement))
-            self.booklist.SetItem(index,  9, str(i.getSubject()))
-            self.booklist.SetItem(index, 10, str(i.getGenre()))
-            self.booklist.SetItem(index, 11, str(i.getAuthor()))
-            self.booklist.SetItem(index, 12, str(i.getEdition()))
