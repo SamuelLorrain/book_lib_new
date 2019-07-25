@@ -1,11 +1,19 @@
-from main_comportement import *
+from main_behavior import *
 import main_layout
 from wx import App
+
+"""
+Main class, call the Main Window (frame),
+and loop on it
+OnInit is derived from wx.App
+and have more or less the same purpose
+as __init__
+"""
 
 class BookLibrary(App):
     def OnInit(self):
         mainFrame = main_layout.MainFrame(None,"Book Library")
-        comportement = Comportement(mainFrame)
+        behavior = Behavior(mainFrame)
         mainFrame.Show()
         self.SetTopWindow(mainFrame)
         return True

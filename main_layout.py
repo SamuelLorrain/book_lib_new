@@ -2,6 +2,11 @@ import wx
 import wx.lib.mixins.listctrl
 import constant
 
+"""
+Main layout, contains
+classed herited by wx.Widgets classes.
+"""
+
 class BookLibraryToolBar(wx.ToolBar):
     def __init__(self,frame):
         super().__init__()

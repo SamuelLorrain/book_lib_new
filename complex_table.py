@@ -4,9 +4,9 @@ import constant
 from tools import normalize_field
 
 #
-#-Tester les fonctions en rapport avec filetype_id
-#et edition_id
+#TODO Test functions acting on filetype_id and edition_id
 #
+
 class Book:
     _string = []
     def __init__(self,name,
@@ -24,9 +24,9 @@ class Book:
         self.cursor = sqliteConnect.Db.getCursor()
         self._table = 'book'
 
-        #tous les champs.
-        #TODO test, n'ajouter le rowid que
-        #si il existe dans la base
+        #TODO add rowid only if it exist in the DB
+
+        #All fields
         self._rowid = rowid
         self._note = note
         self._name = normalize_field(name)
@@ -51,15 +51,14 @@ class Book:
 
     @rowid.setter
     def rowid(self,value):
-        #Ne modifie le rowid uniquement si les tests
-        #sont concluant
+        #get rowid only if it exists in the table,
+        #but can't modify it
         if self._rowid:
-            raise ValueError("Impossible de modifier un rowid existant")
+            raise ValueError("Can't modify existing rowid")
         self.cursor.execute("SELECT rowid from book where rowid = ?",(value,))
         fetch = self.cursor.fetchone()
         if not fetch:
-            raise ValueError("Impossible d'accéder à un rowid qui n'existe"
-                    " pas!")
+            raise ValueError("Cant' acces to inexistant rowid")
         self._rowid = value
 
     @property
@@ -193,11 +192,11 @@ class Book:
         return self._table
 
     #
-    #Accès à la BDD
+    #DB Accès
     #
     def add(self):
         if self._rowid:
-            raise ValueError("Impossible d'ajouter un élément déjà existant")
+            raise ValueError("Can't add an element who already exist")
 
         self.db.execute("INSERT INTO book VALUES(?,?,?,?,?,?,?,?,?,?)"
                 ,(self._name,self._note,self._date,self._lu,self._commence,
@@ -211,8 +210,7 @@ class Book:
 
     def remove(self):
         if not self._rowid:
-            raise ValueError("Impossible de supprimer un élément qui n'existe"
-                    " pas")
+            raise ValueError("Can't remove non existent element")
 
         self.db.execute("DELETE FROM book WHERE rowid = ?",(self._rowid,))
         self.db.commit()
@@ -257,7 +255,7 @@ class Book:
         return 10*"{}|".format(self._rowid,self._name)
 
     def __repr__(self):
-        #TODO PLUS PROPRE!!!
+        #TODO more clear
         rowid = "rowid : {}".format(self._rowid)
         name = "name : {}".format(self._name)
         note = "note : {}".format(self._note)
@@ -279,19 +277,19 @@ class Book:
         if type(a) == Book:
             return (self._rowid == a.rowid)
         else:
-            raise TypeError("'==' not implemented for that types")
+            raise TypeError("'==' not implemented for those types")
 
     def __lt__(self,a):
         if type(a) == Book:
             return (self._rowid < a.rowid)
         else:
-            raise TypeError("'<' not implemented for that types")
+            raise TypeError("'<' not implemented for those types")
 
     def __le__(self,a):
         if type(a) == Book:
             return (self._rowid <= a.rowid)
         else:
-            raise TypeError("'<=' not implemented for that types")
+            raise TypeError("'<=' not implemented for those types")
 
     def __hash__(self):
         return hash((self.rowid, self.table))

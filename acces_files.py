@@ -3,6 +3,10 @@ import config
 import tools
 import subprocess
 
+"""
+Methods to read books, books complements, or summary
+"""
+
 class AccessFile:
     path = config.configuration['PATH']['rootPath']
     bookPath = config.configuration['PATH']['bookPath']
@@ -20,8 +24,10 @@ class AccessFile:
 
     @classmethod
     def complement():
+        #TODO
         pass
 
     @classmethod
     def resume():
+        #TODO
         pass

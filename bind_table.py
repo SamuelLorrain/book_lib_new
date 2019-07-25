@@ -3,6 +3,14 @@ import complex_table
 import sqliteConnect
 import constant
 
+"""
+DB Classes to map N:N relations.
+Authorbook, Genrebook, and Subjectbook all inhérit from
+BindType which define CRUD-like operations (add,remove)
+to bind book and author,genre,subject together
+in the DB
+"""
+
 class BindType:
     _string = [
             "INSERT INTO {} VALUES(?,?)",
@@ -19,11 +27,12 @@ class BindType:
         self._table = table
         self._col_one_name = col_one_name.lower()
         self._col_two_name = col_two_name.lower()
-        #!! les sous types doivent checker les variables
-        #col_One et col_Two pour qu'elles correspondent
-        #à des tables en particulier
-        #TODO check, ne met le rowid que si il existe dans la base
-        #(à faire pour tous les types!)
+        """
+        Subtypes must check attributs
+        col_one and col_two.
+        """
+        #TODO check, set rowid only if it exists in the tables
+        #(todo for all types)
         self._rowid = rowid
         self._col_one = col_one
         self._col_two = col_two
@@ -45,7 +54,7 @@ class BindType:
 
     def add(self):
         if self._rowid:
-            raise ValueError("Impossible d'ajouter un élément déjà existant")
+            raise ValueError("Unable to add element who already exist")
         self._db.execute(BindType._string[0].format(self._table),
                 (self._col_one.rowid,self._col_two.rowid))
         self._db.commit()
@@ -53,16 +62,15 @@ class BindType:
             self._col_one_name,self._col_two_name),
                 (self._col_one.rowid,self._col_two.rowid))
         self._rowid = self._cursor.fetchone()[0]
-        return self #à voir si on garde ?
+        return self #to keep ?
 
     def remove(self):
         if not self._rowid:
-            raise ValueError("Impossible de supprimer un élément qui n'existe"
-                    " pas")
+            raise ValueError("Unable to delete an element who doesn't exist")
         self._db.execute(BindType._string[2].format(self._table),(self._rowid,))
         self._db.commit()
         self._rowid = None
-        return self #à voir si on garde?
+        return self #to keep ?
 
     def __repr__(self):
         string = "{} <==> {}\n".format(self._col_one.rowid, self.col_two.rowid)
@@ -77,6 +85,11 @@ class BindType:
     def __eq__(self,a):
         return (self._rowid == a.rowid) and (self._table == a._table)
 
+
+"""
+AuthorBook, GenreBook, SujbectBook inhérit from BindType,
+the only special operations they all have is type checking.
+"""
 class AuthorBook(BindType):
     def __init__(self,col_one=None,col_two=None,rowid=None):
         if col_one and (type(col_one) is not simple_table.Author):
