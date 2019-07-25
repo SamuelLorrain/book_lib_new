@@ -5,6 +5,7 @@ import wx
 import select_items
 import factory_table
 from acces_files import *
+import history
 import constant
 import config
 import bdd_misc_queries
@@ -70,19 +71,16 @@ class Behavior:
 
         self.query = []
         self.searchQuery = []
-        self.history = []
+        self.history = history.History()
 
         self.statusbar.SetStatusText("{} book(s) in the"
                 " database".format(bdd_misc_queries.numberOfBooks()))
-
 
         self.initList()
         self.initEvent()
 
     def setQuery(self,newQuery):
-        if len(self.history) >= config.configuration['HISTORY']['historyLength']:
-            self.history.pop(0)
-        self.history.append(self.query)
+        self.history.setQueryHistory(newQuery)
         self.query = newQuery
 
     def initEvent(self):

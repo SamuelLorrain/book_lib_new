@@ -13,14 +13,15 @@ Use the factory_table function only (other functions are helper)
 """
 def factory_table(tableName,value):
     """
-    Renvoi le bon constructeur
-    de la table, ou une référence sur un objet déjà existant:
-    si la query renvoi quelque chose, alors la value
-    existe déjà et on renvoi l'objet plutôt qu'un nouvel objet.
+    Return the good constructor of the table
+    or a reference to an object if the table already exist.
 
-    tableName est le nom de la table (parmi les tables existantes)
-    value est une valeur existante dans la base de donnée
-    pour choper créer le bon objet dans la table
+    tableName is the table name (in the existing tables)
+    value is an existing value in the DB
+    to get or create the good object
+
+    factory_table dispatch his logic in the
+    _factory_table_string, factory_bind and _factory_table_int functions
     """
     cursor = sqliteConnect.Db.getCursor()
     if tableName not in (constant.SIMPLETABLES+constant.COMPLEXTABLES):
