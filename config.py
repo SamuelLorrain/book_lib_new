@@ -3,7 +3,7 @@ configuration = {
             "rootPath" : "/media/samuel/HITASHI/",
             "bookPath" : "Documents ecrits db",
             "databasePath" :
-                "/home/samuel/Documents/Prog/Python/booklibrary_new/data.db",
+                "/home/samuel/Documents/Prog/Python/book_lib_new/data.db",
             "complementPath" : "",
             "resumePath" : "",
             },

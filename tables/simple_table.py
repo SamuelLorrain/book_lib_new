@@ -1,4 +1,4 @@
-from bind_table import *
+from tables.bind_table import *
 from tools import normalize_field
 import sqliteConnect
 import constant

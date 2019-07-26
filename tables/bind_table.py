@@ -1,5 +1,5 @@
-import simple_table
-import complex_table
+import tables.simple_table
+import tables.complex_table
 import sqliteConnect
 import constant
 

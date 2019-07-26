@@ -1,6 +1,6 @@
-from simple_table import *
-from complex_table import *
-import bind_table
+from tables.simple_table import *
+from tables.complex_table import *
+import tables.bind_table
 import sqliteConnect
 import tools
 import constant

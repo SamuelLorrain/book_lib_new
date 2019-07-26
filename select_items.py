@@ -1,7 +1,7 @@
-import simple_table
-import bind_table
-import complex_table
-import factory_table
+from tables import simple_table
+from tables import bind_table
+from tables import complex_table
+from tables import factory_table
 import sqliteConnect
 import constant
 from tools import normalize_field

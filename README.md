@@ -10,7 +10,7 @@ Also, unlike many management programs, I wanted to use
 *sqlite* to get the swiftness and fonctionnality
 of a SGBD.
 
-To stay with a simple and light program, I wanted to have
+To stay with a simple and light program, I wanted to have as
 less dependencies as possible. So, the only dependency is wxWidget.
 
 Main functionnalities:

@@ -1,5 +1,5 @@
+from tables import simple_table
 import sqliteConnect
-import simple_table
 import constant
 from tools import normalize_field
 

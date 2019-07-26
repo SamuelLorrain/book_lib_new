@@ -3,7 +3,7 @@ from dialog_behavior import *
 from dialog_layout import *
 import wx
 import select_items
-import factory_table
+from tables import factory_table
 from acces_files import *
 import history
 import constant

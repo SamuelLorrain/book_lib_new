@@ -1,4 +1,4 @@
-import complex_table
+import tables.complex_table
 import config
 import tools
 import subprocess
