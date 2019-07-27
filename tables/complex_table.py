@@ -7,6 +7,40 @@ from tools import normalize_field
 #TODO Test functions acting on filetype_id and edition_id
 #
 
+"""
+Book is the type that represent books in the database.
+Book contains:
+    - note
+    - name
+    - date
+    - lu (read)
+    - commence (beginned)
+    - physic
+    - resume (summary)
+    - complement
+    - rowid
+
+========================================================
+
+#To use it, first, create a new book
+book = Book('name')
+
+#Then add it to the database with
+book.add() #(it will execute the corresponding SQL query)
+
+#you can remove it from the database with
+book.remove()  #(it will execute the corresponding SQL query)
+
+========================================================
+
+All attribut are accessible via @property and @setter methods
+
+We can fetch some informations about the books with those methods:
+getAuthor(), getGenre(),
+getSubject(), getFiletype(),
+getEdition()
+
+"""
 class Book:
     _string = []
     def __init__(self,name,

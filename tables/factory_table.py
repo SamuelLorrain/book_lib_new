@@ -6,10 +6,12 @@ import tools
 import constant
 
 """
-Factory functions for
-simple and complex tables
+Factory functions for tables
+Use the factory_table and factory_bind
+function only
+(other functions are used as sub_sections of
+the factory)
 
-Use the factory_table function only (other functions are helper)
 """
 def factory_table(tableName,value):
     """
@@ -21,7 +23,7 @@ def factory_table(tableName,value):
     to get or create the good object
 
     factory_table dispatch his logic in the
-    _factory_table_string, factory_bind and _factory_table_int functions
+    _factory_table_string and _factory_table_int functions
     """
     cursor = database.sqliteConnect.Db.getCursor()
     if tableName not in (constant.SIMPLETABLES+constant.COMPLEXTABLES):
@@ -58,6 +60,31 @@ def factory_table(tableName,value):
         return _factory_table_int(tableName,value,fetch)
     else:
         raise TypeError
+
+def factory_bind(col_one,col_two):
+    """
+    Return the good constructor of the bind table.
+    """
+    if type(col_one) is not (simple_table.Author or simple_table.Genre or
+            simple_table.Subject):
+        raise TypeError('col_one must be a author, genre or subject type')
+    if type(col_two) is not complex_table.Book:
+        raise TypeError('col_two must be a book!')
+
+    cursor = database.sqliteConnect.Db.getCursor()
+    cursor.execute("""SELECT rowid from {0}book where {0}_id = ? and book_id =
+            ?""".format(col_one.table), (col_one.rowid, col_two.rowid))
+    if cursor.fetchone() == None:
+        bind_rowid = None
+    else:
+        bind_rowid = cursor.fetchone()[0]
+
+    if type(col_one) is simple_table.Author:
+        return bind_table.AuthorBook(col_one,col_two,bind_rowid)
+    if type(col_one) is simple_table.Genre:
+        return bind_table.GenreBook(col_one,col_two,bind_rowid)
+    if type(col_one) is simple_table.Subject:
+        return bind_table.SubjectBook(col_one,col_two,bind_rowid)
 
 
 def _factory_table_string(tableName : str,value : str, fetch):
@@ -141,26 +168,4 @@ def _factory_table_int(tableName : str,value : int, fetch):
             return tmpObject
     else:
         raise ValueError("le rowid entré n'existe pas dans la table!")
-
-def factory_bind(col_one,col_two):
-    if type(col_one) is not (simple_table.Author or simple_table.Genre or
-            simple_table.Subject):
-        raise TypeError('col_one must be a author, genre or subject type')
-    if type(col_two) is not complex_table.Book:
-        raise TypeError('col_two must be a book!')
-
-    cursor = database.sqliteConnect.Db.getCursor()
-    cursor.execute("""SELECT rowid from {0}book where {0}_id = ? and book_id =
-            ?""".format(col_one.table), (col_one.rowid, col_two.rowid))
-    if cursor.fetchone() == None:
-        bind_rowid = None
-    else:
-        bind_rowid = cursor.fetchone()[0]
-
-    if type(col_one) is simple_table.Author:
-        return bind_table.AuthorBook(col_one,col_two,bind_rowid)
-    if type(col_one) is simple_table.Genre:
-        return bind_table.GenreBook(col_one,col_two,bind_rowid)
-    if type(col_one) is simple_table.Subject:
-        return bind_table.SubjectBook(col_one,col_two,bind_rowid)
 

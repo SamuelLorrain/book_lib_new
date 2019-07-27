@@ -4,12 +4,35 @@ import database.sqliteConnect
 import constant
 
 """
-DB Classes to map N:N relations.
+DB Types to map N:N relations.
 Authorbook, Genrebook, and Subjectbook all inhérit from
 BindType which define CRUD-like operations (add,remove)
 to bind book and author,genre,subject together
-in the DB
+in the DB. Subtypes are used for type comparaison and
+interface only.
+
+BindType contains:
+    - col_one
+    - col_two
+    - rowid
+
+========================================================
+#first create a BindType object:
+b = AuthorBook(SimpleType_author,SimpleType_book)
+
+#then add it to de database
+b.add()
+
+#you can also remove it from the database
+b.remove()
+
+========================================================
+
+- We can compare two BindType (__eq__)
+- rowid, col_one, col_two are accessible via @property and @setter methods
+- table, col_one_name, col_two_name are property that contains tables name
 """
+
 
 class BindType:
     _string = [
@@ -44,13 +67,43 @@ class BindType:
     def rowid(self):
         return self._rowid
 
+    @rowid.setter
+    def rowid(self,value):
+        #change only if the rowid has never been initialised
+        #in fact, DON'T USE THIS METHOD
+        if self._rowid:
+            raise ValueError("Unable to modify an existant rowid")
+        self._cursor.execute("SELECT rowid from book where rowid = ?",(value,))
+        fetch = self._cursor.fetchone()
+        if not fetch:
+            raise ValueError("Unable to modify a non-existant rowid")
+        self._rowid = value
+
     @property
     def col_one(self):
         return self._col_one
 
+    @col_one.setter
+    def col_one(self,value):
+        #TODO
+        pass
+
     @property
     def col_two(self):
         return self._col_two
+
+    @col_two.setter
+    def col_two(self,value):
+        #TODO
+        pass
+
+    @property
+    def col_one_name(self):
+        return self._col_one_name
+
+    @property
+    def col_two_name(self):
+        return self._col_two_name
 
     def add(self):
         if self._rowid:

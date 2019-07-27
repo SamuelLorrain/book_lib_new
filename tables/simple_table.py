@@ -3,6 +3,36 @@ from tools import normalize_field
 import database.sqliteConnect
 import constant
 
+"""
+SimpleTypes represent atomic objects
+in the database.
+SimplesTypes that contains
+only those attributs:
+    - a name
+    - a rowid
+Edition, Author, Genre, Subject, Filetype
+are all 4 types derived from SimpleType (they are
+used only for type comparaison and interface simplicity).
+It's a data mapper who dialog with the
+database.
+
+==============================================
+
+#To use it, first, create a new object
+t = SimpleType('subject','subjectName')
+
+#Then add it to the database with
+t.add() #(it will execute the corresponding SQL query)
+
+#you can remove it from the database with
+t.remove()  #(it will execute the corresponding SQL query)
+
+==============================================
+
+- We can compare the equality of two simple types (__eq__)
+- 'name', and 'rowid' are accessible via @property and @setter method
+- table name is accessible via 'table' @property
+"""
 class SimpleType:
     _string = [
         "UPDATE {} SET name = ? WHERE rowid = ?",
@@ -20,7 +50,7 @@ class SimpleType:
         self._db = database.sqliteConnect.Db.getDB()
         self._cursor = database.sqliteConnect.Db.getCursor()
 
-        #TODO test, n'ajoute le rowid que si il existe dans la base
+        #TODO test, add the rowid only if it exists in the DB
         self._rowid = rowid
         self._name = normalize_field(name)
 
@@ -34,16 +64,16 @@ class SimpleType:
 
     @rowid.setter
     def rowid(self,value):
-        #Ne modifie le rowid uniquement si les tests
-        #sont concluant
+        #change only if the rowid has never been initialised
+        #in fact, DON'T USE THIS METHOD
         if self._rowid:
-            raise ValueError("Impossible de modifier un rowid existant")
+            raise ValueError("Unable to modify an existant rowid")
         self._cursor.execute("SELECT rowid from book where rowid = ?",(value,))
         fetch = self._cursor.fetchone()
         if not fetch:
-            raise ValueError("Impossible d'accéder à un rowid qui n'existe"
-                    " pas!")
+            raise ValueError("Unable to modify a non-existant rowid")
         self._rowid = value
+
 
     @property
     def name(self):
