@@ -2,7 +2,7 @@ from tables import simple_table
 from tables import bind_table
 from tables import complex_table
 from tables import factory_table
-import sqliteConnect
+import database.sqliteConnect
 import constant
 from tools import normalize_field
 from collections.abc import Iterable
@@ -10,7 +10,7 @@ from collections.abc import Iterable
 class SelectItems:
     @classmethod
     def by(cls,value,behavior='and'):
-        cursor = sqliteConnect.Db.getCursor()
+        cursor = database.sqliteConnect.Db.getCursor()
         if isinstance(value, Iterable) and behavior == 'or':
             return cls._by_or(value)
         elif isinstance(value, Iterable) and behavior == 'and':
@@ -102,7 +102,7 @@ class SelectItems:
             else:
                 raise TypeError("""type de l'entrée incompatible avec la sélection
                         dans la base de données""")
-        cursor = sqliteConnect.Db.getCursor()
+        cursor = database.sqliteConnect.Db.getCursor()
         cursor.execute(stringQuery)
         return [complex_table.Book(*i) for i in cursor.fetchall()]
 
@@ -114,7 +114,7 @@ class SelectItems:
         if tableName not in constant.SIMPLETABLES+constant.COMPLEXTABLES:
             raise ValueError("""la table entrée n'existe pas""")
 
-        cursor = sqliteConnect.Db.getCursor()
+        cursor = database.sqliteConnect.Db.getCursor()
         if mode == 'before':
             cursor.execute(
             "SELECT *,rowid FROM {} WHERE name LIKE ? ORDER BY name ASC".format(
@@ -151,7 +151,7 @@ class SelectItems:
             être de type str""")
         if tableName not in constant.SIMPLETABLES+constant.COMPLEXTABLES:
             raise ValueError("""la table entrée n'existe pas""")
-        cursor = sqliteConnect.Db.getCursor()
+        cursor = database.sqliteConnect.Db.getCursor()
         cursor.execute("SELECT *,rowid FROM {} ORDER BY name ASC".format(tableName))
 
         if tableName == 'edition':

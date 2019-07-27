@@ -1,7 +1,7 @@
 from tables.simple_table import *
 from tables.complex_table import *
 import tables.bind_table
-import sqliteConnect
+import database.sqliteConnect
 import tools
 import constant
 
@@ -23,7 +23,7 @@ def factory_table(tableName,value):
     factory_table dispatch his logic in the
     _factory_table_string, factory_bind and _factory_table_int functions
     """
-    cursor = sqliteConnect.Db.getCursor()
+    cursor = database.sqliteConnect.Db.getCursor()
     if tableName not in (constant.SIMPLETABLES+constant.COMPLEXTABLES):
         raise TypeError("table unknown")
 
@@ -149,7 +149,7 @@ def factory_bind(col_one,col_two):
     if type(col_two) is not complex_table.Book:
         raise TypeError('col_two must be a book!')
 
-    cursor = sqliteConnect.Db.getCursor()
+    cursor = database.sqliteConnect.Db.getCursor()
     cursor.execute("""SELECT rowid from {0}book where {0}_id = ? and book_id =
             ?""".format(col_one.table), (col_one.rowid, col_two.rowid))
     if cursor.fetchone() == None:

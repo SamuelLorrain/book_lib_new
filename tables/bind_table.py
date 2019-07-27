@@ -1,6 +1,6 @@
 import tables.simple_table
 import tables.complex_table
-import sqliteConnect
+import database.sqliteConnect
 import constant
 
 """
@@ -37,8 +37,8 @@ class BindType:
         self._col_one = col_one
         self._col_two = col_two
 
-        self._db = sqliteConnect.Db.getDB()
-        self._cursor = sqliteConnect.Db.getCursor()
+        self._db = database.sqliteConnect.Db.getDB()
+        self._cursor = database.sqliteConnect.Db.getCursor()
 
     @property
     def rowid(self):

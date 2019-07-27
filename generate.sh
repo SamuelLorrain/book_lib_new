@@ -16,7 +16,7 @@ DATABASE_NAME="data.db"
 SQL_FILE="schema.sql"
 
 if [ -f "$DATABASE_NAME" ] ;then
-    echo "\nThe database already exists with the same name. To generate a new database
+    echo -e "\nThe database already exists with the same name. To generate a new database
 You must change the name of the existant database first\n"
     exit 1
 fi

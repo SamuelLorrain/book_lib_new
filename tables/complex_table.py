@@ -1,5 +1,5 @@
 from tables import simple_table
-import sqliteConnect
+import database.sqliteConnect
 import constant
 from tools import normalize_field
 
@@ -20,8 +20,8 @@ class Book:
             edition_id=None,
             complement=False,
             rowid=None):
-        self.db = sqliteConnect.Db.getDB()
-        self.cursor = sqliteConnect.Db.getCursor()
+        self.db = database.sqliteConnect.Db.getDB()
+        self.cursor = database.sqliteConnect.Db.getCursor()
         self._table = 'book'
 
         #TODO add rowid only if it exist in the DB

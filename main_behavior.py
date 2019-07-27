@@ -2,13 +2,13 @@ from main_layout import *
 from dialog_behavior import *
 from dialog_layout import *
 import wx
-import select_items
+from database import select_items
 from tables import factory_table
 from acces_files import *
 import history
 import constant
 import config
-import bdd_misc_queries
+from database import bdd_misc_queries
 
 """
 Main behavior, collect all logic in a master object

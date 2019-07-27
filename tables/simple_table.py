@@ -1,6 +1,6 @@
 from tables.bind_table import *
 from tools import normalize_field
-import sqliteConnect
+import database.sqliteConnect
 import constant
 
 class SimpleType:
@@ -17,8 +17,8 @@ class SimpleType:
         if table not in constant.SIMPLETABLES:
             raise TypeError
         self._table = table
-        self._db = sqliteConnect.Db.getDB()
-        self._cursor = sqliteConnect.Db.getCursor()
+        self._db = database.sqliteConnect.Db.getDB()
+        self._cursor = database.sqliteConnect.Db.getCursor()
 
         #TODO test, n'ajoute le rowid que si il existe dans la base
         self._rowid = rowid
