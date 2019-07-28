@@ -5,6 +5,23 @@ import constant
 """
 Main layout, contains
 classed herited by wx.Widgets classes.
+Contains:
+    - BookLibraryToolBar
+    - BookLibraryMenuBar
+    - PanelLeft
+        - InfoBookTree
+        - LaunchButton
+        - SearchComboBox
+        - SearchPanel
+    - PanelRight
+        - BookList
+And a global interface class: MainFrame
+
+MainFrame contains objects from all classes except those
+who are defined inside "PanelLeft" and "PanelRight".
+
+Basically, all classes create objects from the wxWidget library,
+and group them together to create the interface.
 """
 
 class BookLibraryToolBar(wx.ToolBar):
@@ -17,6 +34,7 @@ class BookLibraryToolBar(wx.ToolBar):
         self.toolbar = self.frame.CreateToolBar()
         self.toolbar.SetToolSeparation(10)
 
+        #TODO fetch more generic icons ?
         self.undo = self.toolbar.AddTool(wx.ID_UNDO,
                 'Undo',
                 wx.Bitmap('/usr/share/icons/gnome/32x32/actions/gtk-undo-ltr.png'))
@@ -34,6 +52,7 @@ class BookLibraryToolBar(wx.ToolBar):
                 'Export Book',
                 wx.Bitmap('/usr/share/icons/gnome/32x32/actions/gtk-save-as.png'))
         self.toolbar.Realize()
+
 
 class BookLibraryMenuBar(wx.MenuBar):
     def __init__(self):
@@ -197,6 +216,7 @@ class PanelRight(wx.Panel):
         self.hBox = wx.BoxSizer(wx.HORIZONTAL)
         self.hBox.Add(self.list,1,wx.EXPAND | wx.LEFT | wx.RIGHT , 5)
         self.SetSizer(self.hBox)
+
 
 class MainFrame(wx.Frame):
     def __init__(self,parent,title):

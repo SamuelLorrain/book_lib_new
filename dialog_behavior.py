@@ -1,6 +1,6 @@
 import wx
 import wx.adv
-from dialog_layout import *
+from layout.dialog_layout import *
 
 class DialogBehavior:
     def __init__(self, mainFrameObject):

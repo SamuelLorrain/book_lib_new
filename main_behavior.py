@@ -1,6 +1,6 @@
-from main_layout import *
+from layout.main_layout import *
 from dialog_behavior import *
-from dialog_layout import *
+from layout.dialog_layout import *
 import wx
 from database import select_items
 from tables import factory_table

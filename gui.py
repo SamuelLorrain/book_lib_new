@@ -1,5 +1,5 @@
 from main_behavior import *
-import main_layout
+import layout.main_layout
 from wx import App
 
 """
@@ -12,7 +12,7 @@ as __init__
 
 class BookLibrary(App):
     def OnInit(self):
-        mainFrame = main_layout.MainFrame(None,"Book Library")
+        mainFrame = layout.main_layout.MainFrame(None,"Book Library")
         behavior = Behavior(mainFrame)
         mainFrame.Show()
         self.SetTopWindow(mainFrame)
