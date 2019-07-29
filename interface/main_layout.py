@@ -2,12 +2,14 @@ import wx
 import wx.lib.mixins.listctrl
 import constant
 
+import interface.menubar
+import interface.toolbar
+
 """
 Main layout, contains
 classed herited by wx.Widgets classes.
 Contains:
     - BookLibraryToolBar
-    - BookLibraryMenuBar
     - PanelLeft
         - InfoBookTree
         - LaunchButton
@@ -23,100 +25,6 @@ who are defined inside "PanelLeft" and "PanelRight".
 Basically, all classes create objects from the wxWidget library,
 and group them together to create the interface.
 """
-
-class BookLibraryToolBar(wx.ToolBar):
-    def __init__(self,frame):
-        super().__init__()
-        self.frame = frame
-        self.InitUI()
-
-    def InitUI(self):
-        self.toolbar = self.frame.CreateToolBar()
-        self.toolbar.SetToolSeparation(10)
-
-        #TODO fetch more generic icons ?
-        self.undo = self.toolbar.AddTool(wx.ID_UNDO,
-                'Undo',
-                wx.Bitmap('/usr/share/icons/gnome/32x32/actions/gtk-undo-ltr.png'))
-        self.redo = self.toolbar.AddTool(wx.ID_REDO,
-                'Redo',
-                wx.Bitmap('/usr/share/icons/gnome/32x32/actions/gtk-redo-ltr.png'))
-        self.toolbar.AddSeparator()
-        self.add = self.toolbar.AddTool(wx.ID_ANY,
-                'Add Book',
-                wx.Bitmap('/usr/share/icons/gnome/32x32/actions/gtk-add.png'))
-        self.properties = self.toolbar.AddTool(wx.ID_ANY,
-                'Change Book',
-                wx.Bitmap('/usr/share/icons/gnome/32x32/actions/gtk-properties.png'))
-        self.export = self.toolbar.AddTool(wx.ID_ANY,
-                'Export Book',
-                wx.Bitmap('/usr/share/icons/gnome/32x32/actions/gtk-save-as.png'))
-        self.toolbar.Realize()
-
-
-class BookLibraryMenuBar(wx.MenuBar):
-    def __init__(self):
-        super().__init__()
-
-        self.FileMenuInit()
-        self.EditMenuInit()
-        self.ToolMenuInit()
-        self.HelpMenuInit()
-
-        self.Append(self.fileMenu, '&File')
-        self.Append(self.editMenu, '&Edit')
-        self.Append(self.toolMenu, '&Tool')
-        self.Append(self.helpMenu, '&Help')
-
-    def FileMenuInit(self):
-        self.fileMenu = wx.Menu()
-
-        self.exportItem = self.fileMenu.Append(wx.ID_ANY,
-                '&Export...\tCtrl+E', 'Export books to a tablet or a phone etc.')
-        self.fileMenu.InsertSeparator(1)
-        self.preferenceItem = self.fileMenu.Append(wx.ID_ANY,
-                '&Préférences...\tCtrl+P', 'Préférences')
-        self.quitItem = self.fileMenu.Append(wx.ID_EXIT, '&Quit\tCtrl+Q', 'Quit Application')
-
-    def EditMenuInit(self):
-        self.editMenu = wx.Menu()
-        self.undoItem = self.editMenu.Append(wx.ID_UNDO, "Undo\tCtrl+u",
-                "Action Précédente")
-        self.redoItem = self.editMenu.Append(wx.ID_REDO, "Redo\tCtrl+r",
-                "Action Suivante")
-
-    def ToolMenuInit(self):
-        self.toolMenu = wx.Menu()
-
-        self.addMenu = wx.Menu()
-        self.modMenu = wx.Menu()
-
-        self.addBookItem = self.toolMenu.Append(wx.ID_ANY, "Add Book...\tCtrl+N",
-                "Ajouter un livre")
-
-        self.addSubjectItem = self.addMenu.Append(wx.ID_ANY, "Subject...",
-                "Ajouter un sujet")
-        self.addGenreItem = self.addMenu.Append(wx.ID_ANY, "Genre...",
-                "Ajouter un genre")
-        self.addAuthorItem = self.addMenu.Append(wx.ID_ANY, "Author...",
-                "Ajouter un auteur")
-
-        self.modBookItem = self.modMenu.Append(wx.ID_ANY, "Book...",
-                "Ajouter un livre")
-        self.modSubjectItem = self.modMenu.Append(wx.ID_ANY, "Subject...",
-                "Ajouter un sujet")
-        self.modGenreItem = self.modMenu.Append(wx.ID_ANY, "Genre...",
-                "Ajouter un genre")
-        self.modAuthorItem = self.modMenu.Append(wx.ID_ANY, "Author...",
-                "Ajouter un auteur")
-
-        self.toolMenu.Append(wx.ID_ANY, 'Add', self.addMenu)
-        self.toolMenu.Append(wx.ID_ANY, 'Modifier', self.modMenu)
-
-    def HelpMenuInit(self):
-        self.helpMenu = wx.Menu()
-        self.aproposItem = self.helpMenu.Append(wx.ID_ANY, 'À &propos...',
-                'Get information about the application')
 
 class PanelLeft(wx.Panel):
     class InfoBookTree(wx.TreeCtrl):
@@ -243,12 +151,12 @@ class MainFrame(wx.Frame):
         self.SetMinSize((500,200))
 
     def InitMenubar(self):
-        self.menuBar = BookLibraryMenuBar()
+        self.menuBar = interface.menubar.BookLibraryMenuBar()
         self.SetMenuBar(self.menuBar)
 
     def InitStatusBar(self):
         self.statusBar = self.CreateStatusBar(1)
 
     def InitToolBar(self):
-        self.toolBar = BookLibraryToolBar(self)
+        self.toolBar = interface.toolbar.BookLibraryToolBar(self)
 

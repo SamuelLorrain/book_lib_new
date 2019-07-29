@@ -1,6 +1,6 @@
 import wx
 import wx.adv
-from layout.dialog_layout import *
+from interface.dialog_layout import *
 
 class DialogBehavior:
     def __init__(self, mainFrameObject):
@@ -30,10 +30,10 @@ class DialogBehavior:
         self.mainFrame.Close()
 
     def pressAnnulerPreference(self,e):
-        print("test")
+        pass
 
     def pressSavePreference(self,e):
-        print("toast")
+        pass
 
     #===============================
     #

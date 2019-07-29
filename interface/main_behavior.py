@@ -1,6 +1,6 @@
-from layout.main_layout import *
-from dialog_behavior import *
-from layout.dialog_layout import *
+from interface.main_layout import *
+from interface.dialog_behavior import *
+from interface.dialog_layout import *
 import wx
 from database import select_items
 from tables import factory_table
@@ -76,8 +76,10 @@ class Behavior:
         self.statusbar.SetStatusText("{} book(s) in the"
                 " database".format(bdd_misc_queries.numberOfBooks()))
 
+
         self.initList()
         self.initEvent()
+
 
     def setQuery(self,newQuery):
         self.history.setQueryHistory(newQuery)
