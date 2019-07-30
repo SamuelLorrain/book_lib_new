@@ -4,12 +4,12 @@ import constant
 
 import interface.menubar
 import interface.toolbar
+import interface.booklist
 
 """
 Main layout, contains
 classed herited by wx.Widgets classes.
 Contains:
-    - BookLibraryToolBar
     - PanelLeft
         - InfoBookTree
         - LaunchButton
@@ -90,17 +90,6 @@ class PanelLeft(wx.Panel):
         self.SetSizer(self.vBox)
 
 class PanelRight(wx.Panel):
-    class BookList(wx.ListCtrl,
-            wx.lib.mixins.listctrl.ColumnSorterMixin):
-        def __init__(self,parent):
-            wx.ListCtrl.__init__(self,parent,wx.ID_ANY, style=wx.LC_REPORT)
-            wx.lib.mixins.listctrl.ColumnSorterMixin.__init__(self, 1000)
-
-            #TODO itemDataMap
-
-        def GetListCtrl(self):
-            return self
-
     def __init__(self,parent,style=wx.BORDER_THEME,**kwargs):
         super().__init__(parent,wx.ID_ANY,
                 style=wx.HSCROLL | wx.VSCROLL | wx.BORDER_RAISED
@@ -109,22 +98,12 @@ class PanelRight(wx.Panel):
 
     def InitUI(self):
         #list
-        self.list = self.BookList(self)
-        self.list.InsertColumn(0, 'name', width=200)
-        self.list.InsertColumn(1, 'note', width=80)
-        self.list.InsertColumn(2, 'date', width=80)
-        self.list.InsertColumn(3, 'lu', width=80)
-        self.list.InsertColumn(4, 'commence', width=80)
-        self.list.InsertColumn(5, 'physic', width=80)
-        self.list.InsertColumn(6, 'resume', width=80)
-        self.list.InsertColumn(7, 'filetype', width=80)
-        self.list.InsertColumn(8, 'complement', width=80)
+        self.list = interface.booklist.BookList(self)
 
         #sizer
         self.hBox = wx.BoxSizer(wx.HORIZONTAL)
         self.hBox.Add(self.list,1,wx.EXPAND | wx.LEFT | wx.RIGHT , 5)
         self.SetSizer(self.hBox)
-
 
 class MainFrame(wx.Frame):
     def __init__(self,parent,title):
