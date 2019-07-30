@@ -5,46 +5,21 @@ import constant
 import interface.menubar
 import interface.toolbar
 import interface.booklist
+import interface.infobooktree
+import interface.launchbutton
+import interface.searchcombobox
 
 """
 Main layout, contains
 classed herited by wx.Widgets classes.
 Contains:
     - PanelLeft
-        - InfoBookTree
-        - LaunchButton
-        - SearchComboBox
         - SearchPanel
     - PanelRight
-        - BookList
 And a global interface class: MainFrame
-
-MainFrame contains objects from all classes except those
-who are defined inside "PanelLeft" and "PanelRight".
-
-Basically, all classes create objects from the wxWidget library,
-and group them together to create the interface.
 """
 
 class PanelLeft(wx.Panel):
-    class InfoBookTree(wx.TreeCtrl):
-        def __init__(self,parent):
-            super().__init__(parent, wx.ID_ANY)
-
-    class LaunchButton(wx.Button):
-        def __init__(self,parent,label):
-            super().__init__(parent, wx.ID_ANY, label=label)
-
-    class SearchComboBox(wx.ComboBox):
-        def __init__(self,parent):
-            choices = constant.CHOICESCOMBOSEARCH
-            super().__init__(parent, wx.ID_ANY, style=wx.CB_READONLY,
-                    choices=choices)
-            self.InitUI()
-
-        def InitUI(self):
-            self.SetSelection(len(constant.CHOICESCOMBOSEARCH)-1)
-
     class SearchPanel(wx.Panel):
         def __init__(self,parent):
             super().__init__(parent,wx.ID_ANY)
@@ -55,7 +30,7 @@ class PanelLeft(wx.Panel):
             self.entrySearch = wx.SearchCtrl(self,wx.ID_ANY,size=(300,35),
                     style=wx.TE_PROCESS_ENTER)
             self.entrySearch.SetMaxLength(300)
-            self.searchComboBox = PanelLeft.SearchComboBox(self)
+            self.searchComboBox = interface.searchcombobox.SearchComboBox(self)
             self.resultSearch = wx.ListBox(self,wx.ID_ANY)
 
             self.vBox.Add(self.entrySearch, 0,wx.EXPAND,0)
@@ -71,8 +46,8 @@ class PanelLeft(wx.Panel):
     def InitUI(self):
         self.vBox = wx.BoxSizer(wx.VERTICAL)
 
-        self.infoBookTree = self.InfoBookTree(self)
-        self.launchButton = self.LaunchButton(self,"Launch Book")
+        self.infoBookTree = interface.infobooktree.InfoBookTree(self)
+        self.launchButton = interface.launchbutton.LaunchButton(self,"Launch Book")
 
         #panelLeft_tab
         #self.vBox_tab = wx.Notebook(self)
