@@ -13,7 +13,15 @@ as __init__
 class BookLibrary(App):
     def OnInit(self):
         mainFrame = interface.main_layout.MainFrame(None,"Book Library")
+        """
+        Init of all behavior,
+        communication between elements
+        """
         behavior = Behavior(mainFrame)
+        mainFrame.panelLeft.launchButton.setQuery(behavior.query)
+        #mainFrame.panelRight.bookList.setQuery(behavior.query)
+        #behavior.setQuery(select_items.SelectItems.like('book','A'))
+
         mainFrame.Show()
         self.SetTopWindow(mainFrame)
         return True

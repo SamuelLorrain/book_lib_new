@@ -10,13 +10,13 @@ import interface.launchbutton
 import interface.searchcombobox
 
 """
-Main layout, contains
-classed herited by wx.Widgets classes.
+Main layout, collect all
+interfaces classes into a
+complete layout.
 Contains:
     - PanelLeft
-        - SearchPanel
     - PanelRight
-And a global interface class: MainFrame
+    - MainFrame
 """
 
 class PanelLeft(wx.Panel):
@@ -39,15 +39,16 @@ class PanelLeft(wx.Panel):
 
             self.SetSizer(self.vBox)
 
-    def __init__(self,parent,style=wx.BORDER_THEME,size=(250,300)):
+    def __init__(self,parent,booklist,style=wx.BORDER_THEME, size=(250,300)):
         super().__init__(parent,wx.ID_ANY,style=style,size=(250,300))
-        self.InitUI()
+        self.InitUI(booklist)
 
-    def InitUI(self):
+    def InitUI(self, booklist):
         self.vBox = wx.BoxSizer(wx.VERTICAL)
 
         self.infoBookTree = interface.infobooktree.InfoBookTree(self)
-        self.launchButton = interface.launchbutton.LaunchButton(self,"Launch Book")
+        self.launchButton = interface.launchbutton.LaunchButton(self,
+                "Launch Book", booklist)
 
         #panelLeft_tab
         #self.vBox_tab = wx.Notebook(self)
@@ -73,11 +74,11 @@ class PanelRight(wx.Panel):
 
     def InitUI(self):
         #list
-        self.list = interface.booklist.BookList(self)
+        self.bookList = interface.booklist.BookList(self)
 
         #sizer
         self.hBox = wx.BoxSizer(wx.HORIZONTAL)
-        self.hBox.Add(self.list,1,wx.EXPAND | wx.LEFT | wx.RIGHT , 5)
+        self.hBox.Add(self.bookList,1,wx.EXPAND | wx.LEFT | wx.RIGHT , 5)
         self.SetSizer(self.hBox)
 
 class MainFrame(wx.Frame):
@@ -94,10 +95,8 @@ class MainFrame(wx.Frame):
         self.splitter = wx.SplitterWindow(self,
                 style=wx.SP_LIVE_UPDATE|wx.SP_3D)
         #panelLeft
-        self.panelLeft = PanelLeft(self.splitter)
-
-        #panelRight
         self.panelRight = PanelRight(self.splitter)
+        self.panelLeft = PanelLeft(self.splitter, self.panelRight.bookList)
 
         #splitter
         self.splitter.SplitVertically(self.panelLeft,self.panelRight,100)

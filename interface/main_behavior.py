@@ -27,7 +27,7 @@ class Behavior:
 
         self.panelL = self.main.panelLeft
         self.panelR = self.main.panelRight
-        self.booklist = self.main.panelRight.list
+        self.booklist = self.main.panelRight.bookList
         self.statusbar = self.main.statusBar
         self.launchButton = self.main.panelLeft.launchButton
         self.infoBookTree = self.main.panelLeft.infoBookTree
@@ -87,8 +87,8 @@ class Behavior:
 
     def initEvent(self):
         #launchButton
-        self.main.Bind(wx.EVT_BUTTON, self.launchBook,
-                id=self.launchButton.GetId())
+        #self.main.Bind(wx.EVT_BUTTON, self.launchBook,
+        #        id=self.launchButton.GetId())
         #bookList
         self.main.Bind(wx.EVT_LIST_ITEM_SELECTED, self.showInfoBook,
                 id=self.booklist.GetId())

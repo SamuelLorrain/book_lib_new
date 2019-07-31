@@ -19,6 +19,13 @@ class BookLibraryMenuBar(wx.MenuBar):
         self.Append(self.toolMenu, '&Tool')
         self.Append(self.helpMenu, '&Help')
 
+
+    """
+    File:
+    - Export
+    - Preferences
+    - Quit
+    """
     def FileMenuInit(self):
         self.fileMenu = wx.Menu()
 
@@ -29,6 +36,11 @@ class BookLibraryMenuBar(wx.MenuBar):
                 '&Préférences...\tCtrl+P', 'Préférences')
         self.quitItem = self.fileMenu.Append(wx.ID_EXIT, '&Quit\tCtrl+Q', 'Quit Application')
 
+    """
+    Edit:
+    - Undo
+    - Redo
+    """
     def EditMenuInit(self):
         self.editMenu = wx.Menu()
         self.undoItem = self.editMenu.Append(wx.ID_UNDO, "Undo\tCtrl+u",
@@ -36,6 +48,19 @@ class BookLibraryMenuBar(wx.MenuBar):
         self.redoItem = self.editMenu.Append(wx.ID_REDO, "Redo\tCtrl+r",
                 "Action Suivante")
 
+    """
+    Tool:
+    - Add Book
+    - Add:
+        - Subject
+        - Genre
+        - Author
+    - Modifier:
+        - Book
+        - Subject
+        - Author
+        - Genre
+    """
     def ToolMenuInit(self):
         self.toolMenu = wx.Menu()
 
@@ -64,6 +89,10 @@ class BookLibraryMenuBar(wx.MenuBar):
         self.toolMenu.Append(wx.ID_ANY, 'Add', self.addMenu)
         self.toolMenu.Append(wx.ID_ANY, 'Modifier', self.modMenu)
 
+    """
+    Help:
+        - A propos
+    """
     def HelpMenuInit(self):
         self.helpMenu = wx.Menu()
         self.aproposItem = self.helpMenu.Append(wx.ID_ANY, 'À &propos...',
