@@ -77,7 +77,7 @@ class Behavior:
 
         #init list items
         self.query.setQuery(select_items.SelectItems.like('book','A'))
-        self.fillList()
+        self.booklist.fillList(self.query)
 
         self.initEvent()
 
@@ -85,7 +85,7 @@ class Behavior:
         #launchButton
         #self.main.Bind(wx.EVT_BUTTON, self.launchBook,
         #        id=self.launchButton.GetId())
-        #bookList
+        #booklist
         self.main.Bind(wx.EVT_LIST_ITEM_SELECTED, self.showInfoBook,
                 id=self.booklist.GetId())
         self.main.Bind(wx.EVT_LIST_ITEM_ACTIVATED, self.launchBook,
@@ -146,7 +146,7 @@ class Behavior:
         tmpQuery = factory_table.factory_table(
                 self.searchComboBox.GetStringSelection(),e.GetString())
         self.query.setQuery(select_items.SelectItems.by(tmpQuery))
-        self.fillList()
+        self.booklist.fillList(self.query)
 
     def searchItems(self,e):
         txtQuery = self.searchEntry.GetLineText(0)
@@ -160,7 +160,7 @@ class Behavior:
 
         if self.searchComboBox.GetStringSelection() == 'book':
             self.query.setQuery(self.searchQuery)
-            self.fillList()
+            self.booklist.fillList(self.query)
 
         if len(self.searchQuery) > 100:
             self.searchQuery = self.searchQuery[:100]
@@ -255,7 +255,7 @@ class Behavior:
                     tmpSubject = tmpBook.getSubject()
                     self.query.setQuery(select_items.SelectItems.by(
                                 self.infoBookTree.GetItemData(i)))
-                    self.fillList()
+                    self.booklist.fillList(self.query)
         elif self.infoBookTree.GetSelection() in self.infoBookTree_authorlist:
             for j,i in enumerate(self.infoBookTree_authorlist):
                 if self.infoBookTree.GetSelection() == i:
@@ -263,7 +263,7 @@ class Behavior:
                     tmpAuthor = tmpBook.getAuthor()
                     self.query.setQuery(select_items.SelectItems.by(
                             self.infoBookTree.GetItemData(i)))
-                    self.fillList()
+                    self.booklist.fillList(self.query)
         elif self.infoBookTree.GetSelection() in self.infoBookTree_genrelist:
             for j,i in enumerate(self.infoBookTree_genrelist):
                 if self.infoBookTree.GetSelection() == i:
@@ -271,22 +271,9 @@ class Behavior:
                     tmpGenre = tmpBook.getGenre()
                     self.query.setQuery(select_items.SelectItems.by(
                             self.infoBookTree.GetItemData(i)))
-                    self.fillList()
+                    self.booklist.fillList(self.query)
 
     def fillSearchList(self):
         self.searchResult.Clear()
         for i in self.searchQuery:
             self.searchResult.Append(i.name)
-
-    def fillList(self):
-        self.booklist.DeleteAllItems()
-        for j,i in enumerate(self.query):
-            index = self.booklist.InsertItem(j, i.name)
-            self.booklist.SetItem(index,  1, str(i.note))
-            self.booklist.SetItem(index,  2, str(i.date))
-            self.booklist.SetItem(index,  3, str(i.lu))
-            self.booklist.SetItem(index,  4, str(i.commence))
-            self.booklist.SetItem(index,  5, str(i.physic))
-            self.booklist.SetItem(index,  6, str(i.resume))
-            self.booklist.SetItem(index,  7, str(i.getFiletype()))
-            self.booklist.SetItem(index,  8, str(i.complement))

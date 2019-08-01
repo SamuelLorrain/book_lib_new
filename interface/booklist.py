@@ -1,4 +1,5 @@
 import wx
+from query import Query
 
 class BookList(wx.ListCtrl,
         wx.lib.mixins.listctrl.ColumnSorterMixin):
@@ -20,3 +21,17 @@ class BookList(wx.ListCtrl,
     def GetListCtrl(self):
         return self
 
+    def fillList(self,query):
+        if type(query) is not Query:
+            TypeError("query must be a Query object")
+        self.DeleteAllItems()
+        for j,i in enumerate(query):
+            index = self.InsertItem(j, i.name)
+            self.SetItem(index,  1, str(i.note))
+            self.SetItem(index,  2, str(i.date))
+            self.SetItem(index,  3, str(i.lu))
+            self.SetItem(index,  4, str(i.commence))
+            self.SetItem(index,  5, str(i.physic))
+            self.SetItem(index,  6, str(i.resume))
+            self.SetItem(index,  7, str(i.getFiletype()))
+            self.SetItem(index,  8, str(i.complement))
