@@ -5,6 +5,7 @@ import wx
 from database import select_items
 from tables import factory_table
 from acces_files import *
+import query
 import history
 import constant
 import config
@@ -68,22 +69,17 @@ class Behavior:
         self.addButton = self.main.toolBar.add
         self.propertiesButton = self.main.toolBar.properties
 
-
-        self.query = []
-        self.searchQuery = []
+        self.query = query.Query()
         self.history = history.History()
 
         self.statusbar.SetStatusText("{} book(s) in the"
                 " database".format(bdd_misc_queries.numberOfBooks()))
 
+        #init list items
+        self.query.setQuery(select_items.SelectItems.like('book','A'))
+        self.fillList()
 
-        self.initList()
         self.initEvent()
-
-
-    def setQuery(self,newQuery):
-        self.history.setQueryHistory(newQuery)
-        self.query = newQuery
 
     def initEvent(self):
         #launchButton
@@ -149,7 +145,7 @@ class Behavior:
         txtQuery = self.searchEntry.GetLineText(0)
         tmpQuery = factory_table.factory_table(
                 self.searchComboBox.GetStringSelection(),e.GetString())
-        self.setQuery(select_items.SelectItems.by(tmpQuery))
+        self.query.setQuery(select_items.SelectItems.by(tmpQuery))
         self.fillList()
 
     def searchItems(self,e):
@@ -163,7 +159,7 @@ class Behavior:
                     txtQuery,mode='before|after')
 
         if self.searchComboBox.GetStringSelection() == 'book':
-            self.setQuery(self.searchQuery)
+            self.query.setQuery(self.searchQuery)
             self.fillList()
 
         if len(self.searchQuery) > 100:
@@ -257,7 +253,7 @@ class Behavior:
                 if self.infoBookTree.GetSelection() == i:
                     tmpBook = self.query[self.booklist.GetFirstSelected()]
                     tmpSubject = tmpBook.getSubject()
-                    self.setQuery(select_items.SelectItems.by(
+                    self.query.setQuery(select_items.SelectItems.by(
                                 self.infoBookTree.GetItemData(i)))
                     self.fillList()
         elif self.infoBookTree.GetSelection() in self.infoBookTree_authorlist:
@@ -265,7 +261,7 @@ class Behavior:
                 if self.infoBookTree.GetSelection() == i:
                     tmpBook = self.query[self.booklist.GetFirstSelected()]
                     tmpAuthor = tmpBook.getAuthor()
-                    self.setQuery(select_items.SelectItems.by(
+                    self.query.setQuery(select_items.SelectItems.by(
                             self.infoBookTree.GetItemData(i)))
                     self.fillList()
         elif self.infoBookTree.GetSelection() in self.infoBookTree_genrelist:
@@ -273,13 +269,9 @@ class Behavior:
                 if self.infoBookTree.GetSelection() == i:
                     tmpBook = self.query[self.booklist.GetFirstSelected()]
                     tmpGenre = tmpBook.getGenre()
-                    self.setQuery(select_items.SelectItems.by(
+                    self.query.setQuery(select_items.SelectItems.by(
                             self.infoBookTree.GetItemData(i)))
                     self.fillList()
-
-    def initList(self):
-        self.setQuery(select_items.SelectItems.like('book','A'))
-        self.fillList()
 
     def fillSearchList(self):
         self.searchResult.Clear()
