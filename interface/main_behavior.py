@@ -1,6 +1,7 @@
 from interface.main_layout import *
 from interface.dialog_behavior import *
 from interface.dialog_layout import *
+from interface.search_behavior import *
 import wx
 from database import select_items
 from tables import factory_table
@@ -20,11 +21,16 @@ class Behavior:
         if type(mainFrameObject) is not MainFrame:
          TypeError("the input object is not MainFrame")
 
+        self.query = query.Query()
         """
         Collect all widgets
         """
         self.main = mainFrameObject
         self.dialogbehavior = DialogBehavior(self.main)
+        self.searchPanelBehavior = SearchPanelBehavior(
+                            self.main.panelLeft.searchPanel,
+                            self.main.panelRight.bookList,
+                            self.query)
 
         self.panelL = self.main.panelLeft
         self.panelR = self.main.panelRight
@@ -69,7 +75,6 @@ class Behavior:
         self.addButton = self.main.toolBar.add
         self.propertiesButton = self.main.toolBar.properties
 
-        self.query = query.Query()
         self.history = history.History()
 
         self.statusbar.SetStatusText("{} book(s) in the"
@@ -82,9 +87,6 @@ class Behavior:
         self.initEvent()
 
     def initEvent(self):
-        #launchButton
-        #self.main.Bind(wx.EVT_BUTTON, self.launchBook,
-        #        id=self.launchButton.GetId())
         #booklist
         self.main.Bind(wx.EVT_LIST_ITEM_SELECTED, self.showInfoBook,
                 id=self.booklist.GetId())
@@ -94,17 +96,18 @@ class Behavior:
                 id=self.booklist.GetId())
 
         #searchText
-        self.main.Bind(wx.EVT_SEARCHCTRL_SEARCH_BTN,self.searchItems,
+        self.main.Bind(wx.EVT_SEARCHCTRL_SEARCH_BTN,self.searchPanelBehavior.searchItems,
                 id=self.searchEntry.GetId())
-        self.main.Bind(wx.EVT_TEXT_ENTER,self.searchItems,
+        self.main.Bind(wx.EVT_TEXT_ENTER,self.searchPanelBehavior.searchItems,
                 id=self.searchEntry.GetId())
 
         #searchComboBox
-        self.main.Bind(wx.EVT_COMBOBOX, self.searchItems,
+        self.main.Bind(wx.EVT_COMBOBOX, self.searchPanelBehavior.searchItems,
                 id=self.searchComboBox.GetId())
+        self.main.Bind(wx.EVT_BUTTON, self.launchBook,id=self.launchButton.GetId())
 
         #searchResult
-        self.main.Bind(wx.EVT_LISTBOX_DCLICK, self.setItemsSearched,
+        self.main.Bind(wx.EVT_LISTBOX_DCLICK, self.searchPanelBehavior.setItemsSearched,
                 id=self.searchResult.GetId())
 
         #menu
@@ -140,32 +143,6 @@ class Behavior:
 
         self.main.Bind(wx.EVT_MENU, self.dialogbehavior.showApropos,
                 id=self.aproposItem.GetId())
-
-    def setItemsSearched(self,e):
-        txtQuery = self.searchEntry.GetLineText(0)
-        tmpQuery = factory_table.factory_table(
-                self.searchComboBox.GetStringSelection(),e.GetString())
-        self.query.setQuery(select_items.SelectItems.by(tmpQuery))
-        self.booklist.fillList(self.query)
-
-    def searchItems(self,e):
-        txtQuery = self.searchEntry.GetLineText(0)
-        if self.searchComboBox.GetStringSelection() == '':
-            self.searchQuery = select_items.SelectItems.all(
-                    self.searchComboBox.GetStringSelection())
-        else:
-            self.searchQuery = select_items.SelectItems.like(
-                    self.searchComboBox.GetStringSelection(),
-                    txtQuery,mode='before|after')
-
-        if self.searchComboBox.GetStringSelection() == 'book':
-            self.query.setQuery(self.searchQuery)
-            self.booklist.fillList(self.query)
-
-        if len(self.searchQuery) > 100:
-            self.searchQuery = self.searchQuery[:100]
-
-        self.fillSearchList()
 
     def launchBook(self,e):
         if self.booklist.GetFirstSelected() is not -1:
@@ -272,8 +249,3 @@ class Behavior:
                     self.query.setQuery(select_items.SelectItems.by(
                             self.infoBookTree.GetItemData(i)))
                     self.booklist.fillList(self.query)
-
-    def fillSearchList(self):
-        self.searchResult.Clear()
-        for i in self.searchQuery:
-            self.searchResult.Append(i.name)

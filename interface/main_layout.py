@@ -7,7 +7,7 @@ import interface.toolbar
 import interface.booklist
 import interface.infobooktree
 import interface.launchbutton
-import interface.searchcombobox
+import interface.searchpanel
 
 """
 Main layout, collect all
@@ -20,25 +20,6 @@ Contains:
 """
 
 class PanelLeft(wx.Panel):
-    class SearchPanel(wx.Panel):
-        def __init__(self,parent):
-            super().__init__(parent,wx.ID_ANY)
-            self.InitUI()
-
-        def InitUI(self):
-            self.vBox = wx.BoxSizer(wx.VERTICAL)
-            self.entrySearch = wx.SearchCtrl(self,wx.ID_ANY,size=(300,35),
-                    style=wx.TE_PROCESS_ENTER)
-            self.entrySearch.SetMaxLength(300)
-            self.searchComboBox = interface.searchcombobox.SearchComboBox(self)
-            self.resultSearch = wx.ListBox(self,wx.ID_ANY)
-
-            self.vBox.Add(self.entrySearch, 0,wx.EXPAND,0)
-            self.vBox.Add(self.searchComboBox, 0,wx.EXPAND,0)
-            self.vBox.Add(self.resultSearch, 1,wx.EXPAND,0)
-
-            self.SetSizer(self.vBox)
-
     def __init__(self,parent,booklist,style=wx.BORDER_THEME, size=(250,300)):
         super().__init__(parent,wx.ID_ANY,style=style,size=(250,300))
         self.InitUI(booklist)
@@ -47,17 +28,9 @@ class PanelLeft(wx.Panel):
         self.vBox = wx.BoxSizer(wx.VERTICAL)
 
         self.infoBookTree = interface.infobooktree.InfoBookTree(self)
-        self.launchButton = interface.launchbutton.LaunchButton(self,
-                "Launch Book", booklist)
-
+        self.launchButton = interface.launchbutton.LaunchButton(self)
         #panelLeft_tab
-        #self.vBox_tab = wx.Notebook(self)
-        #self.authorPanel = self.AuthorPanel(self.vBox_tab)
-        self.searchPanel = self.SearchPanel(self)
-
-        #self.vBox_tab.AddPage(self.authorPanel, "info author")
-        #self.vBox_tab.AddPage(self.searchPanel, "search")
-
+        self.searchPanel = interface.searchpanel.SearchPanel(self)
         self.vBox.Add(self.infoBookTree, 1,wx.EXPAND,0)
         self.vBox.Add(self.launchButton, 0,wx.EXPAND,0)
         self.vBox.Add(self.searchPanel, 1,wx.EXPAND,0)
@@ -87,9 +60,6 @@ class MainFrame(wx.Frame):
 
         self.InitUI()
         self.Centre()
-        self.InitMenubar()
-        self.InitStatusBar()
-        self.InitToolBar()
 
     def InitUI(self):
         self.splitter = wx.SplitterWindow(self,
@@ -103,13 +73,13 @@ class MainFrame(wx.Frame):
         self.splitter.SetMinimumPaneSize(300)
         self.SetMinSize((500,200))
 
-    def InitMenubar(self):
+        #menubar
         self.menuBar = interface.menubar.BookLibraryMenuBar()
         self.SetMenuBar(self.menuBar)
 
-    def InitStatusBar(self):
-        self.statusBar = self.CreateStatusBar(1)
+        #statusbar
+        self.statusBar = self.CreateStatusBar(1) #not in another object!
 
-    def InitToolBar(self):
+        #toolbar
         self.toolBar = interface.toolbar.BookLibraryToolBar(self)
 

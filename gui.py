@@ -18,7 +18,7 @@ class BookLibrary(App):
         communication between elements
         """
         behavior = Behavior(mainFrame)
-        mainFrame.panelLeft.launchButton.setQuery(behavior.query)
+        #mainFrame.panelLeft.launchButton.setQuery(behavior.query)
         #mainFrame.panelRight.bookList.setQuery(behavior.query)
         #behavior.setQuery(select_items.SelectItems.like('book','A'))
 
