@@ -13,7 +13,14 @@ import config
 from database import bdd_misc_queries
 
 """
-Main behavior, collect all logic in a master object
+Main behavior, Proxy/Facade
+collect all logic in a master object
+
+Contains also 3 methods that use multiple
+graphic components:
+    - LaunchBook
+    - infoBookTreeActivated
+    - showInfoBook
 """
 
 class Behavior:
@@ -39,44 +46,14 @@ class Behavior:
         self.launchButton = self.main.panelLeft.launchButton
         self.infoBookTree = self.main.panelLeft.infoBookTree
 
-        self.menubar = self.main.menuBar
-        self.statusbar = self.main.statusBar
-        self.fileMenu = self.main.menuBar.fileMenu
-        self.editMenu = self.main.menuBar.editMenu
-        self.toolMenu = self.main.menuBar.toolMenu
-        self.helpMenu = self.main.menuBar.helpMenu
-
-        self.exportItem = self.main.menuBar.exportItem
-        self.preferenceItem = self.main.menuBar.preferenceItem
-        self.quitItem = self.main.menuBar.quitItem
-
-        self.undoItem = self.main.menuBar.undoItem
-        self.redoItem = self.main.menuBar.redoItem
-
-        self.addBookItem = self.main.menuBar.addBookItem
-        self.addSubjectItem = self.main.menuBar.addSubjectItem
-        self.addGenreItem = self.main.menuBar.addGenreItem
-        self.addAuthorItem = self.main.menuBar.addAuthorItem
-
-        self.modBookItem = self.main.menuBar.modBookItem
-        self.modSubjectItem = self.main.menuBar.modSubjectItem
-        self.modGenreItem = self.main.menuBar.modGenreItem
-        self.modAuthorItem = self.main.menuBar.modAuthorItem
-
-        self.aproposItem = self.main.menuBar.aproposItem
 
         self.searchComboBox = self.main.panelLeft.searchPanel.searchComboBox
         self.searchEntry = self.main.panelLeft.searchPanel.entrySearch
         self.searchResult = self.main.panelLeft.searchPanel.resultSearch
 
-        self.toolbar = self.main.toolBar
-        self.undoButton = self.main.toolBar.undo
-        self.redoButton = self.main.toolBar.redo
-        self.addButton = self.main.toolBar.add
-        self.propertiesButton = self.main.toolBar.properties
-
         self.history = history.History()
 
+        self.statusbar = self.main.statusBar
         self.statusbar.SetStatusText("{} book(s) in the"
                 " database".format(bdd_misc_queries.numberOfBooks()))
 
@@ -87,13 +64,16 @@ class Behavior:
         self.initEvent()
 
     def initEvent(self):
-        #booklist
+        #launchbook
+        self.main.Bind(wx.EVT_LIST_ITEM_ACTIVATED, self.launchBook,
+                id=self.booklist.GetId())
+        self.main.Bind(wx.EVT_LIST_ITEM_ACTIVATED, self.launchBook,
+                id=self.booklist.GetId())
+
+        #showInfoBook
         self.main.Bind(wx.EVT_LIST_ITEM_SELECTED, self.showInfoBook,
                 id=self.booklist.GetId())
-        self.main.Bind(wx.EVT_LIST_ITEM_ACTIVATED, self.launchBook,
-                id=self.booklist.GetId())
-        self.main.Bind(wx.EVT_LIST_ITEM_ACTIVATED, self.launchBook,
-                id=self.booklist.GetId())
+
 
         #searchText
         self.main.Bind(wx.EVT_SEARCHCTRL_SEARCH_BTN,self.searchPanelBehavior.searchItems,
@@ -107,48 +87,21 @@ class Behavior:
         self.main.Bind(wx.EVT_BUTTON, self.launchBook,id=self.launchButton.GetId())
 
         #searchResult
-        self.main.Bind(wx.EVT_LISTBOX_DCLICK, self.searchPanelBehavior.setItemsSearched,
+        self.main.Bind(wx.EVT_LISTBOX_DCLICK,
+                self.searchPanelBehavior.setItemsSearched,
                 id=self.searchResult.GetId())
 
-        #menu
-        self.main.Bind(wx.EVT_MENU, self.dialogbehavior.showPreference,
-                id=self.preferenceItem.GetId())
-        self.main.Bind(wx.EVT_MENU, self.dialogbehavior.showExport,
-                id=self.exportItem.GetId())
-        self.main.Bind(wx.EVT_MENU, self.dialogbehavior.pressQuit,
-                id=self.quitItem.GetId())
-
-        self.main.Bind(wx.EVT_MENU, self.dialogbehavior.pressUndo,
-                id=self.undoItem.GetId())
-        self.main.Bind(wx.EVT_MENU, self.dialogbehavior.pressRedo,
-                id=self.redoItem.GetId())
-
-        self.main.Bind(wx.EVT_MENU, self.dialogbehavior.showAddBook,
-                id=self.addBookItem.GetId())
-        self.main.Bind(wx.EVT_MENU, self.dialogbehavior.showAddSubject,
-                id=self.addSubjectItem.GetId())
-        self.main.Bind(wx.EVT_MENU, self.dialogbehavior.showAddGenre,
-                id=self.addGenreItem.GetId())
-        self.main.Bind(wx.EVT_MENU, self.dialogbehavior.showAddAuthor,
-                id=self.addAuthorItem.GetId())
-
-        self.main.Bind(wx.EVT_MENU, self.dialogbehavior.showModBook,
-                id=self.modBookItem.GetId())
-        self.main.Bind(wx.EVT_MENU, self.dialogbehavior.showModSubject,
-                id=self.modSubjectItem.GetId())
-        self.main.Bind(wx.EVT_MENU, self.dialogbehavior.showModGenre,
-                id=self.modGenreItem.GetId())
-        self.main.Bind(wx.EVT_MENU, self.dialogbehavior.showModAuthor,
-                id=self.modAuthorItem.GetId())
-
-        self.main.Bind(wx.EVT_MENU, self.dialogbehavior.showApropos,
-                id=self.aproposItem.GetId())
-
+    """
+    Launch a book based on the selected object of booklist
+    """
     def launchBook(self,e):
         if self.booklist.GetFirstSelected() is not -1:
             print("launch book number %d" % self.booklist.GetFirstSelected())
             AccessFile.book(self.query[self.booklist.GetFirstSelected()])
 
+    """
+    Modify the infoBookTree when we click on an item on the bookList
+    """
     def showInfoBook(self,e):
         if self.booklist.GetFirstSelected() is not -1:
             self.main.Unbind(wx.EVT_TREE_ITEM_ACTIVATED, self.infoBookTree)
@@ -222,6 +175,9 @@ class Behavior:
             self.main.Bind(wx.EVT_TREE_ITEM_ACTIVATED, self.infoBookTreeActivated,
                     id=self.infoBookTree.GetId())
 
+    """
+    Modify bookList when there is a click on an item of the infoBookTree
+    """
     def infoBookTreeActivated(self,e):
         if self.infoBookTree.GetSelection() == self.infoBookTree_name:
             self.launchBook(e)
