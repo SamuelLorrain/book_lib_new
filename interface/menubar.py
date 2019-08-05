@@ -51,7 +51,7 @@ class BookLibraryMenuBar(wx.MenuBar):
     """
     Tool:
     - Add Book
-    - Add:
+    - Add to Book:
         - Subject
         - Genre
         - Author
@@ -86,7 +86,7 @@ class BookLibraryMenuBar(wx.MenuBar):
         self.modAuthorItem = self.modMenu.Append(wx.ID_ANY, "Author...",
                 "Ajouter un auteur")
 
-        self.toolMenu.Append(wx.ID_ANY, 'Add', self.addMenu)
+        self.toolMenu.Append(wx.ID_ANY, 'Add to Book', self.addMenu)
         self.toolMenu.Append(wx.ID_ANY, 'Modifier', self.modMenu)
 
     """

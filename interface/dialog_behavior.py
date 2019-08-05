@@ -2,6 +2,7 @@ import wx
 import wx.adv
 from interface.dialog_layout import *
 import interface.preferences
+import interface.addbook_dialog
 
 class DialogBehavior:
     def __init__(self, mainFrameObject):
@@ -40,7 +41,7 @@ class DialogBehavior:
         self.addButton = self.mainFrame.toolBar.add
         self.propertiesButton = self.mainFrame.toolBar.properties
 
-        #binding events
+        #binding menu events
         self.mainFrame.Bind(wx.EVT_MENU, self.showPreference,
                 id=self.preferenceItem.GetId())
         self.mainFrame.Bind(wx.EVT_MENU, self.showExport,
@@ -74,6 +75,15 @@ class DialogBehavior:
         self.mainFrame.Bind(wx.EVT_MENU, self.showApropos,
                 id=self.aproposItem.GetId())
 
+        #bind toolbar
+        self.mainFrame.Bind(wx.EVT_TOOL, self.pressUndo,
+                id=self.undoButton.GetId())
+        self.mainFrame.Bind(wx.EVT_TOOL, self.pressRedo,
+                id=self.redoButton.GetId())
+        self.mainFrame.Bind(wx.EVT_TOOL, self.showAddBook,
+                id=self.addButton.GetId())
+        #self.mainFrame.Bind(wx.TOOL, self.showAddBook, ??
+        #        id=self.propertiesButton.GetId())
 
     #===============================
     #
@@ -81,7 +91,7 @@ class DialogBehavior:
 
     def showPreference(self,e):
         self.dialog = interface.preferences.PreferenceDialog(self.mainFrame)
-        self.content = self.dialog.mainContent
+        #self.content = self.dialog.mainContent
 
         self.dialog.ShowModal()
 
@@ -106,7 +116,7 @@ class DialogBehavior:
     #===============================
 
     def showAddBook(self,e):
-        self.dialog = AddBookDialog(self.mainFrame)
+        self.dialog = interface.addbook_dialog.AddBookDialog(self.mainFrame)
         self.dialog.ShowModal()
 
     def showAddSubject(self,e):

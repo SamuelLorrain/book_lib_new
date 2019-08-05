@@ -34,3 +34,5 @@ class BookLibraryToolBar(wx.ToolBar):
                 wx.Bitmap('/usr/share/icons/gnome/32x32/actions/gtk-save-as.png'))
         self.toolbar.Realize()
 
+
+

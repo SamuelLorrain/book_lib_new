@@ -22,7 +22,7 @@ class PreferenceDialog(wx.Dialog):
         self.sizer = wx.BoxSizer(wx.HORIZONTAL)
         self.sizer.Add(self.listChoices, 1, wx.EXPAND | wx.ALL,5)
 
-        #Sizebox
+        #Savebox
         self.saveBox = wx.BoxSizer(wx.HORIZONTAL)
         self.saveBox.AddSpacer(200)
         self.sauverButton = wx.Button(self.panel, wx.ID_ANY, label="Sauver")
@@ -31,19 +31,7 @@ class PreferenceDialog(wx.Dialog):
         self.saveBox.Add(self.annulerButton,1,wx.RIGHT,5)
 
         #mainBox
-        #self.mainBox = wx.BoxSizer(wx.VERTICAL)
-
-        #self.mainContent = wx.Panel(self.panel, size=(300, 330))
-        #self.contentBox = wx.BoxSizer(wx.VERTICAL)
-        #self.mainContent.SetSizer(self.contentBox)
-
-        #self.a = wx.StaticText(self.mainContent, label='rootPath')
-        #self.b = wx.TextCtrl(self.mainContent,
-        #        value=str(config.configuration['PATH']['rootPath']),size=(300,30))
-        #self.contentBox.Add(self.a)
-        #self.contentBox.Add(self.b)
-
-        self.changePanelPreferences(None)
+        self.initPanelPeferences(None)
 
         #self.mainBox.Add(self.mainContent)
         #self.mainBox.Add(self.saveBox)
@@ -71,29 +59,22 @@ class PreferenceDialog(wx.Dialog):
         print("save !")
 
     def changePanelPreferences(self,e):
-        #clear all things
-        #for i,_ in enumerate(self.contentBox):
-        #    self.contentBox.Remove(i)
-        #self.contentBox.Layout()
+        pass
 
+    def initPanelPeferences(self,e):
         self.mainBox = wx.BoxSizer(wx.VERTICAL)
+        self.configPanel = dict()
+        self.contentBox = dict()
+        for i in config.configuration.keys():
+            self.configPanel[i] = wx.Panel(self.panel, size=(300,330))
+            self.contentBox[i] = wx.BoxSizer(wx.VERTICAL)
+            self.configPanel[i].SetSizer(self.contentBox[i])
+            for k,value in config.configuration[i].items(): #for sub-configuration items
+                self.contentBox[i].Add(wx.StaticText(self.configPanel[i],label=str(k)))
+                self.contentBox[i].Add(wx.TextCtrl(self.configPanel[i],value=str(value)))
 
-        self.mainContent = wx.Panel(self.panel, size=(300, 330))
-        self.contentBox = wx.BoxSizer(wx.VERTICAL)
-        self.mainContent.SetSizer(self.contentBox)
-
-        #Create config panels dynamically
-        self.labelConfig = []
-        self.fieldConfig = []
-
-        for keyConfig in config.configuration.keys():
-            for k,value in config.configuration[keyConfig].items(): #for sub-configuration items
-                self.labelConfig.append(wx.StaticText(self.mainContent,label=str(k)))
-                self.fieldConfig.append(wx.TextCtrl(self.mainContent,value=str(value),
-                                        size=(300,30)))
-                self.contentBox.Add(self.labelConfig[-1])
-                self.contentBox.Add(self.fieldConfig[-1])
-        self.contentBox.Layout()
-
-        self.mainBox.Add(self.mainContent)
+        keyConfig = self.listChoices.GetString(
+                self.listChoices.GetSelection()).upper()
+        self.mainBox.Add(self.configPanel[keyConfig])
         self.mainBox.Add(self.saveBox)
+        self.mainBox.Layout()
