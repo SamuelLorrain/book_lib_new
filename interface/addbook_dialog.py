@@ -1,22 +1,23 @@
 import wx
 
 class EntryBooks(wx.BoxSizer):
-    def __init__(self,parent,label,entry,choices=[]):
+    def __init__(self,parent,label,widgetType,choices=[]):
         super().__init__(wx.HORIZONTAL)
 
         label = label.capitalize() + " : "
 
         self.label = wx.StaticText(parent, wx.ID_ANY, label,
                     size=(100,20))
-        if entry == 'spin':
+        self.widgetType = widgetType;
+        if self.widgetType == 'spin':
             self.entry = wx.SpinCtrl(parent, wx.ID_ANY, min=1, max=10,
                     initial=5)
-        elif entry == 'text':
+        elif self.widgetType == 'text':
             self.entry = wx.TextCtrl(parent, wx.ID_ANY, value='',
                     size=(300,30))
-        elif entry == 'bool':
+        elif self.widgetType == 'bool':
             self.entry = wx.CheckBox(parent, wx.ID_ANY)
-        elif entry == 'choice':
+        elif self.widgetType == 'choice':
             self.entry = wx.Choice(parent, wx.ID_ANY, choices=choices);
         else:
             raise TypeError("unknown type. Unable to create the menu")
@@ -30,11 +31,40 @@ class EntryBooks(wx.BoxSizer):
         self.AddSpacer(10)
         self.Add(widget)
 
+    @property
+    def value(self):
+        if self.widgetType == 'spin':
+            return self.entry.GetValue()
+        elif self.widgetType == 'text':
+            return self.entry.GetLineText()
+        elif self.widgetType == 'bool':
+            return self.entry.GetValue()
+        elif self.widgetType == 'choice':
+            return self.entry.GetValue()
+
+    @value.setter
+    def value(self, newValue):
+        if self.widgetType == 'spin':
+             self.entry.SetValue(newValue)
+        elif self.widgetType == 'text':
+             self.entry.SetValue(newValue)
+        elif self.widgetType == 'bool':
+             self.entry.SetValue(newValue)
+        elif self.widgetType == 'choice':
+             self.entry.SetValue(newValue)
+
 
 class AddBookDialog(wx.Dialog):
     def __init__(self,parent):
         super(AddBookDialog,self).__init__(parent)
+        self.pathname = ''
         self.InitUI()
+
+        self.Bind(wx.EVT_BUTTON, self.test,
+                id=self.pathButton.GetId())
+
+        self.Bind(wx.EVT_BUTTON, self.test,
+                id=self.sauverButton.GetId())
 
     def InitUI(self):
         self.SetTitle("Add book dialog")
@@ -45,12 +75,13 @@ class AddBookDialog(wx.Dialog):
         self.bookEntries = []
 
         self.pathBookEntry = EntryBooks(self.panel,"Path To Book","text")
-        self.PathButton = wx.Button(self.panel, label="Path")
-        self.pathBookEntry.addWidget(self.PathButton)
+
+        self.pathButton = wx.Button(self.panel, wx.ID_ANY, label="Path")
+
+        self.pathBookEntry.addWidget(self.pathButton)
         self.bookEntries.append(self.pathBookEntry)
 
         self.sizer.Add(self.pathBookEntry)
-
 
         self.infoBook =[
                     ("note" ,'spin',[]),
@@ -83,3 +114,16 @@ class AddBookDialog(wx.Dialog):
         self.sizer.Add(self.saveBox)
 
         self.panel.SetSizer(self.sizer)
+
+    def addBook(self,e):
+        pass
+
+    def openPathDialog(self,e):
+        fileDialog = wx.FileDialog(self, "Open new book",
+                style=wx.FD_OPEN | wx.FD_FILE_MUST_EXIST).ShowModal()
+        if fileDialog == wx.CANCEL():
+            return
+        if fileDialog == wx.OK():
+            self.pathname = fileDialog.GetPath()
+            return
+

@@ -82,7 +82,7 @@ class DialogBehavior:
                 id=self.redoButton.GetId())
         self.mainFrame.Bind(wx.EVT_TOOL, self.showAddBook,
                 id=self.addButton.GetId())
-        #self.mainFrame.Bind(wx.TOOL, self.showAddBook, ??
+        #self.mainFrame.Bind(wx.TOOL, self.showAddBook,
         #        id=self.propertiesButton.GetId())
 
     #===============================
