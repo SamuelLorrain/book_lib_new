@@ -1,3 +1,8 @@
+"""
+Query handle in-app query.
+
+Do not confuse with tables files.
+"""
 class Query:
     def __init__(self):
         self.i = 0

@@ -74,7 +74,6 @@ class Behavior:
         self.main.Bind(wx.EVT_LIST_ITEM_SELECTED, self.showInfoBook,
                 id=self.booklist.GetId())
 
-
         #searchText
         self.main.Bind(wx.EVT_SEARCHCTRL_SEARCH_BTN,self.searchPanelBehavior.searchItems,
                 id=self.searchEntry.GetId())

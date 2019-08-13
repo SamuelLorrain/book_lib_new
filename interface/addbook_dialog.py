@@ -1,4 +1,6 @@
 import wx
+import tools
+from tables.complex_table import Book
 
 class EntryBooks(wx.BoxSizer):
     def __init__(self,parent,label,widgetType,choices=[]):
@@ -60,10 +62,10 @@ class AddBookDialog(wx.Dialog):
         self.pathname = ''
         self.InitUI()
 
-        self.Bind(wx.EVT_BUTTON, self.test,
+        self.Bind(wx.EVT_BUTTON, self.openPathDialog,
                 id=self.pathButton.GetId())
 
-        self.Bind(wx.EVT_BUTTON, self.test,
+        self.Bind(wx.EVT_BUTTON, self.addBook,
                 id=self.sauverButton.GetId())
 
     def InitUI(self):
@@ -72,36 +74,44 @@ class AddBookDialog(wx.Dialog):
         self.SetMaxSize((600,410))
         self.panel = wx.Panel(self)
         self.sizer = wx.BoxSizer(wx.VERTICAL)
-        self.bookEntries = []
 
         self.pathBookEntry = EntryBooks(self.panel,"Path To Book","text")
 
         self.pathButton = wx.Button(self.panel, wx.ID_ANY, label="Path")
 
         self.pathBookEntry.addWidget(self.pathButton)
-        self.bookEntries.append(self.pathBookEntry)
 
         self.sizer.Add(self.pathBookEntry)
 
-        self.infoBook =[
-                    ("note" ,'spin',[]),
-                    ("name" , "text",[]),
-                    ("date" , "text",[]),
-                    ("lu" , "bool",[]),
-                    ("commence" , "bool",[]),
-                    ("physic" , "bool",[]),
-                    ("resume" , "bool",[]),
-                    ("complement" ,"bool",[]),
-                    ("genre",'choice',[]),
-                    ("auteurs (séparés par des ',')" ,"text",[]),
-                    ("sujets (séparés par des ',')" ,"text",[]),
-                    ]
+        self.noteEntry = EntryBooks(self.panel,"note","spin",[])
+        self.sizer.Add(self.noteEntry)
 
-        for j,k,l in self.infoBook:
-            self.bookEntries.append(EntryBooks(self.panel,j,k,l))
+        self.nameEntry = EntryBooks(self.panel, "name", "text", [])
+        self.sizer.Add(self.nameEntry)
 
-        for i in self.bookEntries:
-            self.sizer.Add(i)
+        self.dateEntry = EntryBooks(self.panel, "date", "text", [])
+        self.sizer.Add(self.dateEntry)
+
+        self.luEntry = EntryBooks(self.panel, "lu", "bool", [])
+        self.sizer.Add(self.luEntry)
+
+        self.physicEntry = EntryBooks(self.panel, "physic", "bool", [])
+        self.sizer.Add(self.physicEntry)
+
+        self.resumeEntry = EntryBooks(self.panel, "resume", "bool", [])
+        self.sizer.Add(self.resumeEntry)
+
+        self.commenceEntry = EntryBooks(self.panel, "commence", "bool", [])
+        self.sizer.Add(self.commenceEntry)
+
+        self.genreEntry = EntryBooks(self.panel, "genre", "choice", [])
+        self.sizer.Add(self.genreEntry)
+
+        self.auteurEntry = EntryBooks(self.panel, "auteur", "text", [])
+        self.sizer.Add(self.auteurEntry)
+
+        self.sujetsEntry = EntryBooks(self.panel, "sujets", "text", [])
+        self.sizer.Add(self.sujetsEntry)
 
         #saveBox, DUPLICATES REFERENCES
         self.saveBox = wx.BoxSizer(wx.HORIZONTAL)
@@ -116,14 +126,22 @@ class AddBookDialog(wx.Dialog):
         self.panel.SetSizer(self.sizer)
 
     def addBook(self,e):
-        pass
+        newBook = Book()
+        #Add the file to the
+        self.pathname;
+
+        #Add To the database
+        #newBook.name =
+        #newBook.note =
+        #newBook.lu =
+        #newBook.commence =
+        #newBook.physic =
+        #newBook.resume =
+        #newBook.complement =
+
 
     def openPathDialog(self,e):
         fileDialog = wx.FileDialog(self, "Open new book",
-                style=wx.FD_OPEN | wx.FD_FILE_MUST_EXIST).ShowModal()
-        if fileDialog == wx.CANCEL():
-            return
-        if fileDialog == wx.OK():
-            self.pathname = fileDialog.GetPath()
-            return
-
+                style=wx.FD_OPEN | wx.FD_FILE_MUST_EXIST)
+        fileDialog.ShowModal()
+        self.pathBookEntry.value = fileDialog.GetPath()

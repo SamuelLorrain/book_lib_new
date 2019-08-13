@@ -4,7 +4,7 @@ import constant
 from tools import normalize_field
 
 #
-#TODO Test functions acting on filetype_id and edition_id
+#TODO Test functions on filetype_id and edition_id
 #
 
 """
@@ -43,7 +43,8 @@ getEdition()
 """
 class Book:
     _string = []
-    def __init__(self,name,
+    def __init__(self,
+            name,
             note=5,
             date=None,
             lu=False,

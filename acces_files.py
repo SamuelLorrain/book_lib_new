@@ -6,7 +6,6 @@ import subprocess
 """
 Methods to read books, books complements, or summary
 """
-
 class AccessFile:
     path = config.configuration['PATH']['rootPath']
     bookPath = config.configuration['PATH']['bookPath']
@@ -31,3 +30,4 @@ class AccessFile:
     def resume():
         #TODO
         pass
+
