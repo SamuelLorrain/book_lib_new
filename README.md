@@ -11,7 +11,7 @@ Also, unlike many management programs, I wanted to use
 of a SGBD.
 
 To stay with a simple and light program, I wanted to have as
-less dependencies as possible. So, the only dependency is wxWidget.
+less dependencies as possible. So, the only dependency is *wxWidget*.
 
 Main functionnalities:
 - Fast Searching
@@ -20,22 +20,26 @@ Main functionnalities:
 - Use system software to read ebook (no epub or pdf reader included)
 - Fast access to a resume of the ebook written by yourself
 - Fast access to a complement for the ebook. You know, like when Humble Bundle
-make you download a 5Gb folder with your book.
+makes you download a 5Gb folder with your book.
 
 The program is far from being complete.
 For now, we can't add,remove or modify books in the interface.
-(but it's feasible through python class).
+(but it's feasible through python classes).
 
 # Lauching
 
 ```
-python3 gui.py
+python gui.py
 ```
 
-# install
+# Install
 
 Ensure that you have python3 and wxPython installed
 
+```
+python -v && pip install wxPython
+```
+On Ubuntu, it may be
 ```
 python3 -v && pip3 install wxPython
 ```
