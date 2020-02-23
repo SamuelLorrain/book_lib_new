@@ -8,7 +8,9 @@ class PreferenceDialog(wx.Dialog):
 
         self.currentConfig = OrderedDict()
 
-        self.SetTitle("Préférences")
+        self.SetTitle("Preferences")
+
+        self.keyConfigChoosen = ""
 
         self.SetMinSize((600,400))
         self.SetMaxSize((600,400))
@@ -33,9 +35,6 @@ class PreferenceDialog(wx.Dialog):
         #mainBox
         self.initPanelPeferences(None)
 
-        #self.mainBox.Add(self.mainContent)
-        #self.mainBox.Add(self.saveBox)
-
         self.panel.SetSizer(self.sizer)
 
         self.vBox = wx.BoxSizer(wx.VERTICAL)
@@ -56,25 +55,45 @@ class PreferenceDialog(wx.Dialog):
         self.Destroy()
 
     def savePreferences(self,e):
-        print("save !")
+        print('save!')
 
     def changePanelPreferences(self,e):
-        pass
+        # Hide old active panel
+
+        self.keyConfigChoosen = self.listChoices.GetString(
+                self.listChoices.GetSelection()).upper()
+
+        for i in self.contentBox:
+            if i != self.keyConfigChoosen:
+                self.contentBox[i].ShowItems(False)
+            if i == self.keyConfigChoosen:
+                self.contentBox[i].ShowItems(True)
+
+        self.mainBox.Layout()
+
 
     def initPanelPeferences(self,e):
         self.mainBox = wx.BoxSizer(wx.VERTICAL)
         self.configPanel = dict()
         self.contentBox = dict()
         for i in config.configuration.keys():
-            self.configPanel[i] = wx.Panel(self.panel, size=(300,330))
             self.contentBox[i] = wx.BoxSizer(wx.VERTICAL)
-            self.configPanel[i].SetSizer(self.contentBox[i])
             for k,value in config.configuration[i].items(): #for sub-configuration items
-                self.contentBox[i].Add(wx.StaticText(self.configPanel[i],label=str(k)))
-                self.contentBox[i].Add(wx.TextCtrl(self.configPanel[i],value=str(value)))
+                self.contentBox[i].Add(wx.StaticText(self.panel,label=str(k)))
+                self.contentBox[i].Add(wx.TextCtrl(self.panel,value=str(value),
+                    size=(350,30)))
 
-        keyConfig = self.listChoices.GetString(
+        self.keyConfigChoosen = self.listChoices.GetString(
                 self.listChoices.GetSelection()).upper()
-        self.mainBox.Add(self.configPanel[keyConfig])
+
+        for i in self.contentBox:
+            self.mainBox.Add(self.contentBox[i])
+
+        for i in self.contentBox:
+            if i != self.keyConfigChoosen:
+                self.contentBox[i].ShowItems(False)
+            if i == self.keyConfigChoosen:
+                self.contentBox[i].ShowItems(True)
+
         self.mainBox.Add(self.saveBox)
         self.mainBox.Layout()
