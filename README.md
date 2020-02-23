@@ -76,3 +76,10 @@ Modify it to configure the program
 That's installed !
 
 (The procedure will be simplified someday)
+
+# Todo
+
+- Make all menu items works properly
+- Make instant search instead of button Search
+- Better searching algorithm : fuzzy finding, multi category search, full text search ...
+- Proper management of categories (list of category etc.)
