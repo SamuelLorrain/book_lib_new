@@ -83,3 +83,4 @@ That's installed !
 - Make instant search instead of button Search
 - Better searching algorithm : fuzzy finding, multi category search, full text search ...
 - Proper management of categories (list of category etc.)
+- Right click on books open a menu : copy the link in the database, or open the book
