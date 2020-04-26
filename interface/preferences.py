@@ -51,11 +51,10 @@ class PreferenceDialog(wx.Dialog):
 
 
     def closePreferences(self,e):
-        #if no modifications
         self.Destroy()
 
     def savePreferences(self,e):
-        print('save!')
+        print("save")
 
     def changePanelPreferences(self,e):
         # Hide old active panel
@@ -71,11 +70,10 @@ class PreferenceDialog(wx.Dialog):
 
         self.mainBox.Layout()
 
-
     def initPanelPeferences(self,e):
         self.mainBox = wx.BoxSizer(wx.VERTICAL)
-        self.configPanel = dict()
-        self.contentBox = dict()
+        self.configPanel = OrderedDict()
+        self.contentBox = OrderedDict()
         for i in config.configuration.keys():
             self.contentBox[i] = wx.BoxSizer(wx.VERTICAL)
             for k,value in config.configuration[i].items(): #for sub-configuration items
@@ -95,5 +93,6 @@ class PreferenceDialog(wx.Dialog):
             if i == self.keyConfigChoosen:
                 self.contentBox[i].ShowItems(True)
 
+        self.mainBox.AddSpacer(10)
         self.mainBox.Add(self.saveBox)
         self.mainBox.Layout()

@@ -35,7 +35,7 @@ class SearchPanelBehavior:
             self.bookList.fillList(self.query)
 
         if len(searchQuery) > 100:
-            searchQuery = self.searchQuery[:100]
+            searchQuery = searchQuery[:100]
 
         self.searchPanel.fillSearchList(searchQuery)
 

@@ -1,5 +1,6 @@
 import wx
 import tools
+import config
 from tables.complex_table import Book
 
 class EntryBooks(wx.BoxSizer):
@@ -38,7 +39,7 @@ class EntryBooks(wx.BoxSizer):
         if self.widgetType == 'spin':
             return self.entry.GetValue()
         elif self.widgetType == 'text':
-            return self.entry.GetLineText()
+            return self.entry.GetLineText(0)
         elif self.widgetType == 'bool':
             return self.entry.GetValue()
         elif self.widgetType == 'choice':
@@ -126,22 +127,45 @@ class AddBookDialog(wx.Dialog):
         self.panel.SetSizer(self.sizer)
 
     def addBook(self,e):
-        newBook = Book()
-        #Add the file to the
-        self.pathname;
+        #Add the file to the folder
+        if (self.pathBookEntry.value == ''):
+            wx.MessageDialog(self,
+                    "Error no path to book has been given").ShowModal()
+        else:
+            #creer le nom de fichier depuis le path
+            pathfile = self.pathBookEntry.value
+            (filename, filetype) = tools.break_path(pathfile)
+            filename_normalized = tools.construct_filename(filename, filetype)
+            print(filename_normalized)
+
+            #l'ajouter dans le bon dossier
 
         #Add To the database
-        #newBook.name =
-        #newBook.note =
-        #newBook.lu =
-        #newBook.commence =
-        #newBook.physic =
-        #newBook.resume =
-        #newBook.complement =
+        if (self.nameEntry.value == ''):
+            wx.MessageDialog(self, "Error no name has been given").ShowModal()
+        else:
+            newBook = Book(self.nameEntry.value)
+            #newBook.note =
+            #newBook.lu =
+            #newBook.commence =
+            #newBook.physic =
+            #newBook.resume =
+            #newBook.complement =
+        #Add filetype if necessary
+        #Add author if necessary
+        #Add subject if necessary
+        #Add authorbook if necessary
+        #Add subjectbook if necessary
 
 
+    """
+    Open the Pathdialog and fill the fields pathname, and
+    name of the AddBookDialog accordingly
+    """
     def openPathDialog(self,e):
         fileDialog = wx.FileDialog(self, "Open new book",
                 style=wx.FD_OPEN | wx.FD_FILE_MUST_EXIST)
         fileDialog.ShowModal()
         self.pathBookEntry.value = fileDialog.GetPath()
+        (filenameString,_) = tools.break_path(self.pathBookEntry.value)
+        self.nameEntry.value = filenameString
