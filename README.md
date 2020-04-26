@@ -39,6 +39,7 @@ Ensure that you have python3 and wxPython installed
 ```
 python -v && pip install wxPython
 ```
+
 On Ubuntu, it may be
 ```
 python3 -v && pip3 install wxPython
@@ -76,6 +77,23 @@ Modify it to configure the program
 That's installed !
 
 (The procedure will be simplified someday)
+
+# Cli Tool
+
+You can handle books with the cli tool (Very Beta).
+
+Adding the book to the database.
+This will copy the book to the database folder,
+and add the book to the sqlite3 database with the good
+file type (everything you need to be able to launch the book).
+Unfortunatly adding Authors, Subjects, Genre or others informations
+is not possible now.
+```
+python cli.py <path_to_the_book>
+```
+
+
+
 
 # Todo
 
