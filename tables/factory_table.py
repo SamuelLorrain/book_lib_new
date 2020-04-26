@@ -106,7 +106,7 @@ def _factory_table_string(tableName : str,value : str, fetch):
             tmpObject.rowid = fetch[0]
             return tmpObject
         if tableName == 'filetype':
-            tmpObject = FileType(value)
+            tmpObject = Filetype(value)
             tmpObject.rowid = fetch[0]
             return tmpObject
         if tableName == 'book':
@@ -132,7 +132,7 @@ def _factory_table_string(tableName : str,value : str, fetch):
         if tableName == 'subject':
             return Subject(value)
         if tableName == 'filetype':
-            return FileType(value)
+            return Filetype(value)
         if tableName == 'book':
             return Book(value)
     raise TypeError("pb dans la fonction factory_table_string")
