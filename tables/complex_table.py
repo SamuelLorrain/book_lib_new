@@ -227,7 +227,7 @@ class Book:
         return self._table
 
     #
-    #DB Accès
+    #DB Acces
     #
     def add(self):
         if self._rowid:

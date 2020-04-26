@@ -11,9 +11,10 @@ def break_path(path):
     """
     tmpPath = Path(path)
     return (tmpPath.stem,tmpPath.suffix[1:])
+
 def construct_filename(name,typename):
     """
-    COnstruct filename using name and typename.
+    Construct filename using name and typename.
     Use normalize_field()
     """
     name = normalize_field(name).lower().replace(" ","_")
