@@ -65,8 +65,7 @@ def factory_bind(col_one,col_two):
     """
     Return the good constructor of the bind table.
     """
-    if type(col_one) is not (Author or Genre or
-            Subject):
+    if not isinstance(col_one, (Author,Subject, Genre)):
         raise TypeError('col_one must be a author, genre or subject type')
     if type(col_two) is not Book:
         raise TypeError('col_two must be a book!')
