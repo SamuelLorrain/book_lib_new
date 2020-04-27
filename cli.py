@@ -16,6 +16,7 @@ Todo:
       adding Author/Subject/Genre/Book etc.
     - Adding or removing bind tables in an existing table
     - Refactor things
+    - option to delete the original file
 """
 
 def bindElementsToBook(entries: List[str], tableType: str, bookEntry: Book):
@@ -35,7 +36,6 @@ def bindElementsToBook(entries: List[str], tableType: str, bookEntry: Book):
             bindTable = factory_table.factory_bind(entry, bookEntry)
             bindTable.add()
 
-
 # Parser
 parser = argparse.ArgumentParser(
         prog="cli.py",
@@ -46,38 +46,31 @@ parser.add_argument('path',
                     metavar='path',
                     action="store",
                     type=str,
-                    help="the path to list",
-                    )
+                    help="the path to list")
 
-parser.add_argument('-s',
-                    '--subject',
+parser.add_argument('-s', '--subject',
                     metavar="subject",
                     action="store",
                     type=str,
                     default=[],
                     help="add subjects to book",
-                    nargs="+"
-                    )
+                    nargs="+")
 
-parser.add_argument('-a',
-                    '--author',
+parser.add_argument('-a', '--author',
                     metavar="author",
                     action="store",
                     type=str,
                     default=[],
                     help="add authors to book",
-                    nargs="+"
-                    )
+                    nargs="+")
 
-parser.add_argument('-g',
-                    '--genre',
+parser.add_argument('-g', '--genre',
                     metavar="genre",
                     action="store",
                     type=str,
                     default=[],
                     help="add genre to book",
-                    nargs="+"
-                    )
+                    nargs="+")
 args = parser.parse_args()
 
 # Book copy
