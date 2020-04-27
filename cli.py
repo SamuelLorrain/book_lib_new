@@ -1,18 +1,61 @@
-import acces_files
-import query
-import tools
-from database import select_items
-from database import bdd_misc_queries
-from database import sqliteConnect
-from tables import simple_table
-from tables import factory_table
-from tables import bind_table
-from tables import complex_table
-from pathlib import Path
-import config
 import shutil
 import sys
+import argparse
 
+import tools
+from tables import factory_table
+from pathlib import Path
+import config
+"""
+Todo:
+    - Make if works even if the book already exist in the database
+"""
+
+# Parser
+parser = argparse.ArgumentParser(
+        prog="cli.py",
+        description="CLI tool for book_lib_new",
+        allow_abbrev=False)
+
+parser.add_argument('path',
+                    metavar='path',
+                    action="store",
+                    type=str,
+                    help="the path to list",
+                    )
+
+parser.add_argument('-s',
+                    '--subject',
+                    metavar="subject",
+                    action="store",
+                    type=str,
+                    default=[],
+                    help="add subjects to book",
+                    nargs="+"
+                    )
+
+parser.add_argument('-a',
+                    '--author',
+                    metavar="author",
+                    action="store",
+                    type=str,
+                    default=[],
+                    help="add authors to book",
+                    nargs="+"
+                    )
+
+parser.add_argument('-g',
+                    '--genre',
+                    metavar="genre",
+                    action="store",
+                    type=str,
+                    default=[],
+                    help="add genre to book",
+                    nargs="+"
+                    )
+args = parser.parse_args()
+
+print(args)
 
 # Initialization
 bookFolderEntry = Path(config.configuration["PATH"]["rootPath"]) \
@@ -23,8 +66,7 @@ if not bookFolderEntry.exists():
     print("Please check your configuration file")
     exit(1)
 
-
-bookPathInput = sys.argv[1]
+bookPathInput = args.path
 #print(bookPathInput)
 #print(tools.break_path(str(bookPathInput)))
 #exit(1)
@@ -60,18 +102,27 @@ newBook = factory_table.factory_table('book',
         tools.break_path(str(bookPathInput))[0])
 bookFiletype = factory_table.factory_table('filetype',
         tools.break_path(str(bookPathInput))[1])
-
-print(tools.break_path(str(bookPathInput))[1])
-print(type(bookFiletype))
-print(bookFiletype.name)
-print(bookFiletype.rowid)
 newBook.filetype_id = bookFiletype
-print(newBook.filetype_id)
-print(newBook.name)
-print(bookFiletype)
 
-#newBook.add()
-#print(newBook.name," added to the database")
+newBook.add()
+print(newBook.name," added to the database")
+
+# authors
+for name in args.author:
+    authorEntry = factory_table.factory_table('author', name.title())
+    if not authorEntry.rowid:
+        yesorno = input("'{}' is not in the database, should we add it ?"
+                " [y/n] : ".format(name))
+        if yesorno.lower() == 'y':
+            authorEntry.add()
+            bindTable = factory_table.factory_bind(authorEntry, newBook)
+            bindTable.add()
+        else:
+            continue
+    else:
+        print("{} already in the database".format(authorEntry.name))
+        bindTable = factory_table.factory_bind(authorEntry, newBook)
+        bindTable.add()
 
 #subjects = input("Please, enter the subjects of the book, comma separated : \n")
 #subjectEntries = []

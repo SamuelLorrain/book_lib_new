@@ -1,6 +1,6 @@
 from tables.simple_table import *
 from tables.complex_table import *
-import tables.bind_table
+from tables import bind_table
 import database.sqliteConnect
 import tools
 import constant
@@ -65,10 +65,10 @@ def factory_bind(col_one,col_two):
     """
     Return the good constructor of the bind table.
     """
-    if type(col_one) is not (simple_table.Author or simple_table.Genre or
-            simple_table.Subject):
+    if type(col_one) is not (Author or Genre or
+            Subject):
         raise TypeError('col_one must be a author, genre or subject type')
-    if type(col_two) is not complex_table.Book:
+    if type(col_two) is not Book:
         raise TypeError('col_two must be a book!')
 
     cursor = database.sqliteConnect.Db.getCursor()
@@ -79,11 +79,11 @@ def factory_bind(col_one,col_two):
     else:
         bind_rowid = cursor.fetchone()[0]
 
-    if type(col_one) is simple_table.Author:
+    if type(col_one) is Author:
         return bind_table.AuthorBook(col_one,col_two,bind_rowid)
-    if type(col_one) is simple_table.Genre:
+    if type(col_one) is Genre:
         return bind_table.GenreBook(col_one,col_two,bind_rowid)
-    if type(col_one) is simple_table.Subject:
+    if type(col_one) is Subject:
         return bind_table.SubjectBook(col_one,col_two,bind_rowid)
 
 

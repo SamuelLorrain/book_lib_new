@@ -1,5 +1,5 @@
-import tables.simple_table
-import tables.complex_table
+from tables import simple_table
+from tables import complex_table
 import database.sqliteConnect
 import constant
 
@@ -18,7 +18,7 @@ BindType contains:
 
 ========================================================
 #first create a BindType object:
-b = AuthorBook(SimpleType_author,SimpleType_book)
+b = AuthorBook(SimpleType_author,ComplexType_book)
 
 #then add it to de database
 b.add()
