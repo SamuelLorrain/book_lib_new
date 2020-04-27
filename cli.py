@@ -4,13 +4,37 @@ import argparse
 
 import tools
 from tables import factory_table
+from tables.complex_table import Book
 from pathlib import Path
 import config
+from typing import List
 
 """
 Todo:
     - Make it works even if the book already exist in the database
+    - Use Levenstein distance or other fuzzy finding algo when
+      adding Author/Subject/Genre/Book etc.
+    - Adding or removing bind tables in an existing table
+    - Refactor things
 """
+
+def bindElementsToBook(entries: List[str], tableType: str, bookEntry: Book):
+    for name in entries:
+        entry = factory_table.factory_table(tableType, name.title())
+        if not entry.rowid:
+            yesorno = input("'{}' is not in the database, should we add it ?"
+                    " [y/n] : ".format(name))
+            if yesorno.lower() == 'y':
+                entry.add()
+                bindTable = factory_table.factory_bind(entry, bookEntry)
+                bindTable.add()
+            else:
+                continue
+        else:
+            print("{} already in the database".format(entry.name))
+            bindTable = factory_table.factory_bind(entry, bookEntry)
+            bindTable.add()
+
 
 # Parser
 parser = argparse.ArgumentParser(
@@ -56,9 +80,7 @@ parser.add_argument('-g',
                     )
 args = parser.parse_args()
 
-print(args)
-
-# Initialization
+# Book copy
 bookFolderEntry = Path(config.configuration["PATH"]["rootPath"]) \
         / config.configuration["PATH"]["bookPath"]
 
@@ -68,9 +90,6 @@ if not bookFolderEntry.exists():
     exit(1)
 
 bookPathInput = args.path
-#print(bookPathInput)
-#print(tools.break_path(str(bookPathInput)))
-#exit(1)
 
 bookPath = Path(bookPathInput)
 if not bookPath.exists():
@@ -99,6 +118,7 @@ else:
     print("Error unable to copy the file")
     exit(1)
 
+# Add book in the database
 newBook = factory_table.factory_table('book',
         tools.break_path(str(bookPathInput))[0])
 bookFiletype = factory_table.factory_table('filetype',
@@ -108,55 +128,7 @@ newBook.filetype_id = bookFiletype
 newBook.add()
 print(newBook.name," added to the database")
 
-# authors
-for name in args.author:
-    authorEntry = factory_table.factory_table('author', name.title())
-    if not authorEntry.rowid:
-        yesorno = input("'{}' is not in the database, should we add it ?"
-                " [y/n] : ".format(name))
-        if yesorno.lower() == 'y':
-            authorEntry.add()
-            bindTable = factory_table.factory_bind(authorEntry, newBook)
-            bindTable.add()
-        else:
-            continue
-    else:
-        print("{} already in the database".format(authorEntry.name))
-        bindTable = factory_table.factory_bind(authorEntry, newBook)
-        bindTable.add()
-
-
-for name in args.subject:
-    subjectEntry = factory_table.factory_table('subject', name.title())
-    if not subjectEntry.rowid:
-        yesorno = input("'{}' is not in the database, should we add it ?"
-                " [y/n] : ".format(name))
-        if yesorno.lower() == 'y':
-            subjectEntry.add()
-            bindTable = factory_table.factory_bind(subjectEntry, newBook)
-            bindTable.add()
-        else:
-            continue
-    else:
-        print("{} already in the database".format(subjectEntry.name))
-        bindTable = factory_table.factory_bind(subjectEntry, newBook)
-        bindTable.add()
-
-
-for name in args.genre:
-    genreEntry = factory_table.factory_table('genre', name.title())
-    if not genreEntry.rowid:
-        yesorno = input("'{}' is not in the database, should we add it ?"
-                " [y/n] : ".format(name))
-        if yesorno.lower() == 'y':
-            genreEntry.add()
-            bindTable = factory_table.factory_bind(genreEntry, newBook)
-            bindTable.add()
-        else:
-            continue
-    else:
-        print("{} already in the database".format(genreEntry.name))
-        bindTable = factory_table.factory_bind(genreEntry, newBook)
-        bindTable.add()
-
-
+# bindElements
+bindElementsToBook(args.author, 'author', newBook)
+bindElementsToBook(args.subject, 'subject', newBook)
+bindElementsToBook(args.genre, 'genre', newBook)
