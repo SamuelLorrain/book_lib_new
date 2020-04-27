@@ -6,9 +6,10 @@ import tools
 from tables import factory_table
 from pathlib import Path
 import config
+
 """
 Todo:
-    - Make if works even if the book already exist in the database
+    - Make it works even if the book already exist in the database
 """
 
 # Parser
@@ -124,27 +125,38 @@ for name in args.author:
         bindTable = factory_table.factory_bind(authorEntry, newBook)
         bindTable.add()
 
-#subjects = input("Please, enter the subjects of the book, comma separated : \n")
-#subjectEntries = []
-#for index, subject in enumerate(subjects.split(',')):
-#    subjectEntries[index] = factory_table.factory_table('subject', subject)
-#
-#for subject in subjectEntries:
-#    if subject.rowid == None:
-#        yesorno = input("Do you want to add {} \
-#                subject to the database ? [Y/N]".format(subject.name))
-#        if yesorno.lower() == 'y':
-#            subject.add()
-#        else:
-#            print("discard {}".)
 
-#Bind subjects to the book
+for name in args.subject:
+    subjectEntry = factory_table.factory_table('subject', name.title())
+    if not subjectEntry.rowid:
+        yesorno = input("'{}' is not in the database, should we add it ?"
+                " [y/n] : ".format(name))
+        if yesorno.lower() == 'y':
+            subjectEntry.add()
+            bindTable = factory_table.factory_bind(subjectEntry, newBook)
+            bindTable.add()
+        else:
+            continue
+    else:
+        print("{} already in the database".format(subjectEntry.name))
+        bindTable = factory_table.factory_bind(subjectEntry, newBook)
+        bindTable.add()
 
-#author = input("Please enter ther authors, comma separated : \n")
-#genre = input("Please enter the genre, comma separated : \n")
 
-#print("Book: {}".format(bookNameInDb))
-#print("Subjects : {}".format(subjects))
-#print("Author : {}".format(author))
-#print("Genre : {}".format(genre))
+for name in args.genre:
+    genreEntry = factory_table.factory_table('genre', name.title())
+    if not genreEntry.rowid:
+        yesorno = input("'{}' is not in the database, should we add it ?"
+                " [y/n] : ".format(name))
+        if yesorno.lower() == 'y':
+            genreEntry.add()
+            bindTable = factory_table.factory_bind(genreEntry, newBook)
+            bindTable.add()
+        else:
+            continue
+    else:
+        print("{} already in the database".format(genreEntry.name))
+        bindTable = factory_table.factory_bind(genreEntry, newBook)
+        bindTable.add()
+
 
