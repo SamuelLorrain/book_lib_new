@@ -17,6 +17,7 @@ Todo:
     - Adding or removing bind tables in an existing table
     - Refactor things
     - option to delete the original file
+    - option to change the name of the book
 """
 
 def bindElementsToBook(entries: List[str], tableType: str, bookEntry: Book):
@@ -71,6 +72,7 @@ parser.add_argument('-g', '--genre',
                     default=[],
                     help="add genre to book",
                     nargs="+")
+
 args = parser.parse_args()
 
 # Book copy

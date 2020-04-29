@@ -1,3 +1,5 @@
+#! /usr/bin/python3
+
 from interface.main_behavior import *
 import interface.main_layout
 from wx import App
