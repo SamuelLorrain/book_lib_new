@@ -1,4 +1,5 @@
 import shutil
+import os
 import sys
 import argparse
 
@@ -12,12 +13,10 @@ from typing import List
 """
 Todo:
     - Make it works even if the book already exist in the database
+    - Adding or removing bind tables in an existing table
     - Use Levenstein distance or other fuzzy finding algo when
       adding Author/Subject/Genre/Book etc.
-    - Adding or removing bind tables in an existing table
     - Refactor things
-    - option to delete the original file
-    - option to change the name of the book
 """
 
 def bindElementsToBook(entries: List[str], tableType: str, bookEntry: Book):
@@ -48,6 +47,18 @@ parser.add_argument('path',
                     action="store",
                     type=str,
                     help="the path to list")
+
+parser.add_argument('--name',
+                    metavar='name',
+                    action="store",
+                    type=str,
+                    help="name of the file in the database")
+
+parser.add_argument('--delete',
+                    metavar='delete',
+                    action="store_true",
+                    type=str,
+                    help="will delete the original file")
 
 parser.add_argument('-s', '--subject',
                     metavar="subject",
@@ -94,7 +105,11 @@ if bookPath.is_dir():
     print("Error : the file provided is a directory")
     exit(1)
 
-bookNameInDb = tools.construct_filename(*tools.break_path(str(bookPathInput)))
+if args.name:
+    typename = tools.break_path(str(bookPathInput))[1]
+    bookNameInDb = tools.construct_filename(args.name, typename)
+else:
+    bookNameInDb = tools.construct_filename(*tools.break_path(str(bookPathInput)))
 print("The file '{}' will be copied to '{}'".format(bookPath,bookFolderEntry))
 
 destination = bookFolderEntry / bookNameInDb
@@ -112,6 +127,11 @@ if destination.exists():
 else:
     print("Error unable to copy the file")
     exit(1)
+
+if args.delete:
+    yesorno = input("Are you sure you want to delete {} ? [y/n]".format(args.path))
+    if yesorno.lower() == 'y':
+        os.remove(path)
 
 # Add book in the database
 newBook = factory_table.factory_table('book',
