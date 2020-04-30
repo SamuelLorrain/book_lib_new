@@ -16,6 +16,7 @@ Todo:
     - Use Levenstein distance or other fuzzy finding algo when
       adding Author/Subject/Genre/Book etc.
     - Refactor things
+    - Rename already existing book
 """
 
 def bindElementsToBook(entries: List[str], tableType: str, bookEntry: Book):
@@ -35,77 +36,63 @@ def bindElementsToBook(entries: List[str], tableType: str, bookEntry: Book):
             bindTable = factory_table.factory_bind(entry, bookEntry)
             bindTable.add()
 
-# Parser
-parser = argparse.ArgumentParser(
-        prog="cli.py",
-        description="CLI tool for book_lib_new",
-        allow_abbrev=False)
+def parser():
+    parser = argparse.ArgumentParser(
+            prog="cli.py",
+            description="CLI tool for book_lib_new",
+            allow_abbrev=False)
 
-parser.add_argument('path',
-                    metavar='path',
-                    action="store",
-                    type=str,
-                    help="the path to list",
-                    nargs='?')
+    parser.add_argument('path',
+                        metavar='path',
+                        action="store",
+                        type=str,
+                        help="the path to list",
+                        nargs='?')
 
-parser.add_argument('--data-name',
-                    metavar='data-name',
-                    action="store",
-                    type=str,
-                    help="the name of the book in database")
+    parser.add_argument('--data-name',
+                        metavar='data-name',
+                        action="store",
+                        type=str,
+                        help="the name of the book in database")
 
-parser.add_argument('--name',
-                    metavar='name',
-                    action="store",
-                    type=str,
-                    help="name of the file in the database")
+    parser.add_argument('--name',
+                        metavar='name',
+                        action="store",
+                        type=str,
+                        help="name of the file in the database")
 
-parser.add_argument('--delete',
-                    action="store_true",
-                    help="will delete the original file")
+    parser.add_argument('--delete',
+                        action="store_true",
+                        help="will delete the original file")
 
-parser.add_argument('-s', '--subject',
-                    metavar="subject",
-                    action="store",
-                    type=str,
-                    default=[],
-                    help="add subjects to book",
-                    nargs="+")
+    parser.add_argument('-s', '--subject',
+                        metavar="subject",
+                        action="store",
+                        type=str,
+                        default=[],
+                        help="add subjects to book",
+                        nargs="+")
 
-parser.add_argument('-a', '--author',
-                    metavar="author",
-                    action="store",
-                    type=str,
-                    default=[],
-                    help="add authors to book",
-                    nargs="+")
+    parser.add_argument('-a', '--author',
+                        metavar="author",
+                        action="store",
+                        type=str,
+                        default=[],
+                        help="add authors to book",
+                        nargs="+")
 
-parser.add_argument('-g', '--genre',
-                    metavar="genre",
-                    action="store",
-                    type=str,
-                    default=[],
-                    help="add genre to book",
-                    nargs="+")
+    parser.add_argument('-g', '--genre',
+                        metavar="genre",
+                        action="store",
+                        type=str,
+                        default=[],
+                        help="add genre to book",
+                        nargs="+")
+    return parser.parse_args()
 
-args = parser.parse_args()
-
-if args.path is None and args.data_name is None:
-    parser.error("path to file or --data-name option must be provided")
-
-# Book copy
-bookFolderEntry = Path(config.configuration["PATH"]["rootPath"]) \
-        / config.configuration["PATH"]["bookPath"]
-
-if not bookFolderEntry.exists():
-    print("Error : the book folder (rootPath+bookPath) doesn't exist")
-    print("Please check your configuration file")
-    exit(1)
-
-if args.path:
-    bookPathInput = args.path
-
+def addBook(bookPathInput, bookPathDb, name=None):
     bookPath = Path(bookPathInput)
+
     if not bookPath.exists():
         print("Error : the file doesn't exist")
         exit(1)
@@ -113,7 +100,7 @@ if args.path:
         print("Error : the file provided is a directory")
         exit(1)
 
-    if args.name:
+    if name:
         typename = tools.break_path(str(bookPathInput))[1]
         bookNameInDb = tools.construct_filename(args.name, typename)
     else:
@@ -137,9 +124,9 @@ if args.path:
         exit(1)
 
     if args.delete:
-        yesorno = input("Are you sure you want to delete {} ? [y/n]".format(args.path))
+        yesorno = input("Are you sure you want to delete {} ? [y/n]".format(bookPath))
         if yesorno.lower() == 'y':
-            os.remove(path)
+            os.remove(bookPath)
 
     # Add book in the database
     newBook = factory_table.factory_table('book',
@@ -151,10 +138,36 @@ if args.path:
     newBook.add()
     print(newBook.name," added to the database")
 
-elif args.data_name:
-    newBook = factory_table.factory_table('book', args.data_name.title())
+    return newBook
 
-# bindElements
-bindElementsToBook(args.author, 'author', newBook)
-bindElementsToBook(args.subject, 'subject', newBook)
-bindElementsToBook(args.genre, 'genre', newBook)
+
+if __name__ == '__main__':
+
+    args = parser()
+
+    if args.path is None and args.data_name is None:
+        parser.error("path to file or --data-name option must be provided")
+
+    # Book copy
+    bookFolderEntry = Path(config.configuration["PATH"]["rootPath"]) \
+            / config.configuration["PATH"]["bookPath"]
+
+    if not bookFolderEntry.exists():
+        print("Error : the book folder (rootPath+bookPath) doesn't exist")
+        print("Please check your configuration file")
+        exit(1)
+
+    if args.path:
+        newBook = addBook(args.path, bookFolderEntry, name=args.name)
+    elif args.data_name:
+        newBook = factory_table.factory_table('book', args.data_name.title())
+        if (args.name): #if we rename the book
+            pass
+
+    # bindElements
+    bindElementsToBook(args.author, 'author', newBook)
+    bindElementsToBook(args.subject, 'subject', newBook)
+    bindElementsToBook(args.genre, 'genre', newBook)
+    bindElementsToBook(args.author, 'author', newBook)
+    bindElementsToBook(args.subject, 'subject', newBook)
+    bindElementsToBook(args.genre, 'genre', newBook)
