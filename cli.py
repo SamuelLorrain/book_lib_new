@@ -12,7 +12,6 @@ from typing import List
 
 """
 Todo:
-    - Make it works even if the book already exist in the database
     - Adding or removing bind tables in an existing table
     - Use Levenstein distance or other fuzzy finding algo when
       adding Author/Subject/Genre/Book etc.
@@ -46,7 +45,14 @@ parser.add_argument('path',
                     metavar='path',
                     action="store",
                     type=str,
-                    help="the path to list")
+                    help="the path to list",
+                    nargs='?')
+
+parser.add_argument('--data-name',
+                    metavar='data-name',
+                    action="store",
+                    type=str,
+                    help="the name of the book in database")
 
 parser.add_argument('--name',
                     metavar='name',
@@ -55,9 +61,7 @@ parser.add_argument('--name',
                     help="name of the file in the database")
 
 parser.add_argument('--delete',
-                    metavar='delete',
                     action="store_true",
-                    type=str,
                     help="will delete the original file")
 
 parser.add_argument('-s', '--subject',
@@ -86,6 +90,9 @@ parser.add_argument('-g', '--genre',
 
 args = parser.parse_args()
 
+if args.path is None and args.data_name is None:
+    parser.error("path to file or --data-name option must be provided")
+
 # Book copy
 bookFolderEntry = Path(config.configuration["PATH"]["rootPath"]) \
         / config.configuration["PATH"]["bookPath"]
@@ -95,53 +102,57 @@ if not bookFolderEntry.exists():
     print("Please check your configuration file")
     exit(1)
 
-bookPathInput = args.path
+if args.path:
+    bookPathInput = args.path
 
-bookPath = Path(bookPathInput)
-if not bookPath.exists():
-    print("Error : the file doesn't exist")
-    exit(1)
-if bookPath.is_dir():
-    print("Error : the file provided is a directory")
-    exit(1)
+    bookPath = Path(bookPathInput)
+    if not bookPath.exists():
+        print("Error : the file doesn't exist")
+        exit(1)
+    if bookPath.is_dir():
+        print("Error : the file provided is a directory")
+        exit(1)
 
-if args.name:
-    typename = tools.break_path(str(bookPathInput))[1]
-    bookNameInDb = tools.construct_filename(args.name, typename)
-else:
-    bookNameInDb = tools.construct_filename(*tools.break_path(str(bookPathInput)))
-print("The file '{}' will be copied to '{}'".format(bookPath,bookFolderEntry))
+    if args.name:
+        typename = tools.break_path(str(bookPathInput))[1]
+        bookNameInDb = tools.construct_filename(args.name, typename)
+    else:
+        bookNameInDb = tools.construct_filename(*tools.break_path(str(bookPathInput)))
+    print("The file '{}' will be copied to '{}'".format(bookPath,bookFolderEntry))
 
-destination = bookFolderEntry / bookNameInDb
-source = bookPath
+    destination = bookFolderEntry / bookNameInDb
+    source = bookPath
 
-print("Destination : {}".format(destination))
-print("Source : {}".format(source))
-if destination.exists():
-    print("Error the file {} already exist".format(destination))
-    exit(1)
-shutil.copyfile(source, destination)
+    print("Destination : {}".format(destination))
+    print("Source : {}".format(source))
+    if destination.exists():
+        print("Error the file {} already exist".format(destination))
+        exit(1)
+    shutil.copyfile(source, destination)
 
-if destination.exists():
-    print("The file {} has been successfully copied".format(destination))
-else:
-    print("Error unable to copy the file")
-    exit(1)
+    if destination.exists():
+        print("The file {} has been successfully copied".format(destination))
+    else:
+        print("Error unable to copy the file")
+        exit(1)
 
-if args.delete:
-    yesorno = input("Are you sure you want to delete {} ? [y/n]".format(args.path))
-    if yesorno.lower() == 'y':
-        os.remove(path)
+    if args.delete:
+        yesorno = input("Are you sure you want to delete {} ? [y/n]".format(args.path))
+        if yesorno.lower() == 'y':
+            os.remove(path)
 
-# Add book in the database
-newBook = factory_table.factory_table('book',
-        tools.break_path(str(bookPathInput))[0])
-bookFiletype = factory_table.factory_table('filetype',
-        tools.break_path(str(bookPathInput))[1])
-newBook.filetype_id = bookFiletype
+    # Add book in the database
+    newBook = factory_table.factory_table('book',
+            tools.break_path(str(bookPathInput))[0])
+    bookFiletype = factory_table.factory_table('filetype',
+            tools.break_path(str(bookPathInput))[1])
+    newBook.filetype_id = bookFiletype
 
-newBook.add()
-print(newBook.name," added to the database")
+    newBook.add()
+    print(newBook.name," added to the database")
+
+elif args.data_name:
+    newBook = factory_table.factory_table('book', args.data_name.title())
 
 # bindElements
 bindElementsToBook(args.author, 'author', newBook)
