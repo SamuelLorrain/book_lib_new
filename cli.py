@@ -14,7 +14,6 @@ from typing import List
 Todo:
     - Use Levenstein distance or other fuzzy finding algo when
       adding Author/Subject/Genre/Book etc.
-    - Rename already existing book
 """
 
 def bindElementsToBook(entries: List[str], tableType: str, bookEntry: Book):
@@ -219,6 +218,9 @@ if __name__ == '__main__':
 
     if args.path is None and args.data_name is None:
         parser.error("path to file or --data-name option must be provided")
+    if args.path is not None and args.data_name is not None:
+        parser.error("path to file and --data-name can't be provided at the \
+                same time")
 
     # Book copy
     bookFolderEntry = Path(config.configuration["PATH"]["rootPath"]) \
@@ -233,8 +235,11 @@ if __name__ == '__main__':
         newBook = addBook(args.path, bookFolderEntry, name=args.name)
     elif args.data_name:
         newBook = factory_table.factory_table('book', args.data_name.title())
-        if (args.name): #if we rename the book
-            pass
+        if not newBook.rowid:
+            print("Error the book entered doesn't exist")
+            exit(1)
+        if args.name: #if we rename the book
+            newBook.name = args.name;
 
     # bindElements
     bindElementsToBook(args.author, 'author', newBook)
