@@ -14,11 +14,19 @@ from typing import List
 Todo:
     - Use Levenstein distance or other fuzzy finding algo when
       adding Author/Subject/Genre/Book etc.
-    - Refactor things
     - Rename already existing book
 """
 
 def bindElementsToBook(entries: List[str], tableType: str, bookEntry: Book):
+    """
+    Bind an element to a Book in the database,
+
+    Parameters:
+    entries: A list of different strings elements to bind
+    tableType: the type of data in entries (see: factory_table for the list)
+    bookEntry: A complex_table.Book object, to be binded with element.
+
+    """
     for name in entries:
         entry = factory_table.factory_table(tableType, name.title())
         if not entry.rowid:
@@ -36,6 +44,15 @@ def bindElementsToBook(entries: List[str], tableType: str, bookEntry: Book):
             bindTable.add()
 
 def unbindElementsToBook(entries: List[str], tableType: str, bookEntry: Book):
+    """
+    Unbind an element to a Book in the database,
+
+    Parameters:
+    entries: A list of different strings elements to unbind
+    tableType: the type of data in entries (see: factory_table for the list)
+    bookEntry: A complex_table.Book object, to be unbinded with element.
+
+    """
     for name in entries:
         entry = factory_table.factory_table(tableType, name.title())
         if not entry.rowid:
@@ -50,6 +67,13 @@ def unbindElementsToBook(entries: List[str], tableType: str, bookEntry: Book):
                 bindTable.remove()
 
 def parser():
+    """
+    Warper around argparse std library to
+    create the parser for the cli.
+
+    Returns:
+    args-list
+    """
     parser = argparse.ArgumentParser(
             prog="cli.py",
             description="CLI tool for book_lib_new",
@@ -72,7 +96,7 @@ def parser():
                         metavar='name',
                         action="store",
                         type=str,
-                        help="name of the file in the database")
+                        help="name of the book in the database")
 
     parser.add_argument('--delete',
                         action="store_true",
@@ -101,6 +125,7 @@ def parser():
                         default=[],
                         help="add genre to book",
                         nargs="+")
+
     parser.add_argument('--unbind-subject',
                         metavar="subject",
                         action="store",
@@ -126,7 +151,18 @@ def parser():
                         nargs="+")
     return parser.parse_args()
 
-def addBook(bookPathInput, bookPathDb, name=None):
+def addBook(bookPathInput, bookFolderEntry, name=None):
+    """
+    Add a book to the database : copy the book in the
+    good folder with the good name format, and add
+    it also in the sqlite3 database.
+
+    Parameters:
+    bookPathInput : A string representing the path of the book
+    bookFolderEntry : The path to the folder were the books are stored
+    name : A new name to give to the book. If name is none,
+           the name of the book takes the name of the file.
+    """
     bookPath = Path(bookPathInput)
 
     if not bookPath.exists():
