@@ -12,7 +12,6 @@ from typing import List
 
 """
 Todo:
-    - Adding or removing bind tables in an existing table
     - Use Levenstein distance or other fuzzy finding algo when
       adding Author/Subject/Genre/Book etc.
     - Refactor things
@@ -35,6 +34,20 @@ def bindElementsToBook(entries: List[str], tableType: str, bookEntry: Book):
             print("{} already in the database".format(entry.name))
             bindTable = factory_table.factory_bind(entry, bookEntry)
             bindTable.add()
+
+def unbindElementsToBook(entries: List[str], tableType: str, bookEntry: Book):
+    for name in entries:
+        entry = factory_table.factory_table(tableType, name.title())
+        if not entry.rowid:
+            print("Error, The {} {} is not in the database".format(
+                tableType, name))
+            continue
+        else:
+            bindTable = factory_table.factory_bind(entry, bookEntry)
+            if not bindTable.rowid:
+                print("Error, The bind for {} - {} doesn't exist".format(bookEntry.name, name.title()))
+            else:
+                bindTable.remove()
 
 def parser():
     parser = argparse.ArgumentParser(
@@ -87,6 +100,29 @@ def parser():
                         type=str,
                         default=[],
                         help="add genre to book",
+                        nargs="+")
+    parser.add_argument('--unbind-subject',
+                        metavar="subject",
+                        action="store",
+                        type=str,
+                        default=[],
+                        help="remove subjects from book",
+                        nargs="+")
+
+    parser.add_argument('--unbind-author',
+                        metavar="author",
+                        action="store",
+                        type=str,
+                        default=[],
+                        help="remove authors from book",
+                        nargs="+")
+
+    parser.add_argument('--unbind-genre',
+                        metavar="genre",
+                        action="store",
+                        type=str,
+                        default=[],
+                        help="remove genre from book",
                         nargs="+")
     return parser.parse_args()
 
@@ -168,6 +204,8 @@ if __name__ == '__main__':
     bindElementsToBook(args.author, 'author', newBook)
     bindElementsToBook(args.subject, 'subject', newBook)
     bindElementsToBook(args.genre, 'genre', newBook)
-    bindElementsToBook(args.author, 'author', newBook)
-    bindElementsToBook(args.subject, 'subject', newBook)
-    bindElementsToBook(args.genre, 'genre', newBook)
+
+    # bindElements
+    unbindElementsToBook(args.unbind_author, 'author', newBook)
+    unbindElementsToBook(args.unbind_subject, 'subject', newBook)
+    unbindElementsToBook(args.unbind_genre, 'genre', newBook)
