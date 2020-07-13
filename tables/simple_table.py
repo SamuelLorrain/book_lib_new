@@ -39,7 +39,8 @@ class SimpleType:
         "INSERT INTO {} VALUES(?)",
         "SELECT rowid FROM {} WHERE name = ?",
         "DELETE FROM {} WHERE rowid = ?",
-        "SELECT * FROM {}book WHERE {}_id = ? and book_id = ?"
+        "SELECT * FROM {}book WHERE {}_id = ? and book_id = ?",
+        "SELECT rowid FROM {} WHERE rowid = ?",
             ]
 
     def __init__(self,table,name,rowid=None):
@@ -68,7 +69,7 @@ class SimpleType:
         #in fact, DON'T USE THIS METHOD
         if self._rowid:
             raise ValueError("Unable to modify an existant rowid")
-        self._cursor.execute("SELECT rowid from book where rowid = ?",(value,))
+        self._cursor.execute(SimpleType._string[5].format(self._table), (value,))
         fetch = self._cursor.fetchone()
         if not fetch:
             raise ValueError("Unable to modify a non-existant rowid")

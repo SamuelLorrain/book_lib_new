@@ -73,10 +73,11 @@ def factory_bind(col_one,col_two):
     cursor = database.sqliteConnect.Db.getCursor()
     cursor.execute("""SELECT rowid from {0}book where {0}_id = ? and book_id =
             ?""".format(col_one.table), (col_one.rowid, col_two.rowid))
-    if cursor.fetchone() == None:
+    fetchone = cursor.fetchone()
+    if fetchone == None:
         bind_rowid = None
     else:
-        bind_rowid = cursor.fetchone()[0]
+        bind_rowid = fetchone[0]
 
     if type(col_one) is Author:
         return bind_table.AuthorBook(col_one,col_two,bind_rowid)
