@@ -30,7 +30,7 @@ def factory_table(tableName,value):
         raise TypeError("table unknown")
 
     if type(value) == str:
-        if tableName is "book":
+        if tableName == "book":
             cursor.execute("""SELECT
                     rowid,name,note,
                     date,lu,commence,physic,
@@ -46,7 +46,7 @@ def factory_table(tableName,value):
         return _factory_table_string(tableName,tools.normalize_field(value),fetch)
 
     elif type(value) == int:
-        if tableName is "book":
+        if tableName == "book":
             cursor.execute("""SELECT
                     rowid,name,note,
                     date,lu,commence,physic,

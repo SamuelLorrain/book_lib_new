@@ -241,12 +241,12 @@ if __name__ == '__main__':
         if args.name: #if we rename the book
             newBook.name = args.name;
 
-    # bindElements
+    # bind Elements
     bindElementsToBook(args.author, 'author', newBook)
     bindElementsToBook(args.subject, 'subject', newBook)
     bindElementsToBook(args.genre, 'genre', newBook)
 
-    # bindElements
+    # unbind Elements
     unbindElementsToBook(args.unbind_author, 'author', newBook)
     unbindElementsToBook(args.unbind_subject, 'subject', newBook)
     unbindElementsToBook(args.unbind_genre, 'genre', newBook)

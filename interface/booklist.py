@@ -16,6 +16,8 @@ class BookList(wx.ListCtrl,
         self.InsertColumn(7, 'filetype', width=80)
         self.InsertColumn(8, 'complement', width=80)
 
+        self.Bind(wx.EVT_LIST_ITEM_RIGHT_CLICK, self.rightClickItem)
+
         #TODO itemDataMap
 
     def GetListCtrl(self):
@@ -35,3 +37,12 @@ class BookList(wx.ListCtrl,
             self.SetItem(index,  6, str(i.resume))
             self.SetItem(index,  7, str(i.getFiletype()))
             self.SetItem(index,  8, str(i.complement))
+
+    def rightClickItem(self, e):
+        item = e.GetItem()
+        print(item)
+        menu = wx.Menu()
+        #menu.Append(, "Read Book")
+        #menu.Append(, "Open Book Configuration")
+        self.PopupMenu(menu)
+        menu.Destroy()

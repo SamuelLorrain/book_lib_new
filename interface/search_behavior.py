@@ -13,14 +13,14 @@ class SearchPanelBehavior:
         self.query = query
 
     def setItemsSearched(self,e):
-        txtQuery = self.searchPanel.entrySearch.GetLineText(0)
+        txtQuery = self.searchPanel.entrySearch.GetValue()
         tmpQuery = factory_table.factory_table(
                 self.searchPanel.searchComboBox.GetStringSelection(),e.GetString())
         self.query.setQuery(select_items.SelectItems.by(tmpQuery))
         self.bookList.fillList(self.query)
 
     def searchItems(self,e):
-        txtQuery = self.searchPanel.entrySearch.GetLineText(0)
+        txtQuery = self.searchPanel.entrySearch.GetValue()
         searchQuery = ""
         if self.searchPanel.searchComboBox.GetStringSelection() == '':
             searchQuery = select_items.SelectItems.all(
