@@ -1,5 +1,3 @@
-#! /usr/bin/python3
-
 from interface.main_behavior import *
 import interface.main_layout
 from wx import App
@@ -20,7 +18,6 @@ class BookLibrary(App):
         communication between elements
         """
         behavior = Behavior(mainFrame)
-
         mainFrame.Show()
         self.SetTopWindow(mainFrame)
         return True

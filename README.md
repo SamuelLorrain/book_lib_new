@@ -26,6 +26,8 @@ The program is far from being complete.
 For now, we can't add,remove or modify books in the interface.
 (but it's feasible through python classes).
 
+![screenshot](./screenshot.png)
+
 # Lauching
 
 ```
